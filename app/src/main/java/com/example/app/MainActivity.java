@@ -1,34 +1,115 @@
 package com.example.app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.app.ViewModel.MainViewModel;
+import com.example.app.db.dbClasses.Characters;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import java.util.List;
+
+import static com.example.app.Utilities.Constants.CHARACTER_ID_KEY;
 
 public class MainActivity extends AppCompatActivity {
+    private final Context context = this;
+    private MainViewModel mainViewModel;
+    private List<Characters> charactersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
+        setContentView(R.layout.character_list);
+        initViewModel();
+        FloatingActionButton fab = findViewById(R.id.add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(context, characterDetails.class);
+                int id = -1;
+                intent.putExtra(CHARACTER_ID_KEY, id);
+                try{
+                    context.startActivity(intent);
+                }
+                catch(Exception e){
+                    Log.d("Except", e.toString());
+                }
             }
         });
+    }
+
+    private void initViewModel() {
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        final Observer<List<Characters>> characterObserver = new Observer<List<Characters>>() {
+            @Override
+            public void onChanged(@Nullable List<Characters> characters){
+                charactersList.clear();
+                charactersList.addAll(characters);
+                if(charactersList != null){
+                    for(int i = 0; i< charactersList.size(); i++){
+                        insertCharacterRow(charactersList.get(i));
+                    }
+                }
+            }
+        };
+    }
+
+    private void insertCharacterRow(final Characters add){
+        final LinearLayout layout = findViewById(R.id.rowContainer);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View newCharacterRow = inflater.inflate(R.layout.cards, null);
+        Button button = newCharacterRow.findViewById(R.id.title);
+        button.setText(add.getName());
+        EditText race = newCharacterRow.findViewById(R.id.field2);
+        race.setText(add.getRace());
+        EditText build = newCharacterRow.findViewById(R.id.field3);
+        build.setText(add.getBuild());
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View button){
+                Intent intent = new Intent(getBaseContext(), characterDetails.class);
+                intent.putExtra(CHARACTER_ID_KEY, add.getId());
+                try{
+                    context.startActivity(intent);
+                }
+                catch(Exception e){
+                    Log.d("Except", e.toString());
+                }
+            }
+        });
+        FloatingActionButton delete = newCharacterRow.findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View Button){
+                mainViewModel.deleteCharacter(mainViewModel.getCharacter(add.getId()));
+            }
+        });
+        newCharacterRow.setId(add.getId());
+        ViewGroup insert = layout;
+        View exists = insert.findViewById(add.getId());
+        if(exists == null){
+            insert.addView(newCharacterRow);
+        }else{
+            ((ViewGroup)insert.getParent()).removeView(exists);
+            insert.addView(newCharacterRow);
+        }
     }
 
     @Override

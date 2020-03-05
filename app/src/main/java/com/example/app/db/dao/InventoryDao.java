@@ -1,6 +1,7 @@
 package com.example.app.db.dao;
 
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -25,6 +26,6 @@ public interface InventoryDao {
     @Query("SELECT * FROM Inventory WHERE name MATCH :selection OR description MATCH :selection OR type MATCH :selection")
     List<Inventory> searchInventory(String selection);
 
-    @Query("SELECT * FROM Inventory")
-    List<Inventory> getInventory();
+    @Query("SELECT * FROM Inventory WHERE character = :character")
+    LiveData<List<Inventory>> getCharacterInventory(int character);
 }

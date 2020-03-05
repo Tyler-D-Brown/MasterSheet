@@ -5,7 +5,11 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Inventory", foreignKeys = @ForeignKey(entity = Skill.class, parentColumns = "name", childColumns = "skill"))
+@Entity(tableName = "Inventory", foreignKeys =
+        {
+            @ForeignKey(entity = Skill.class, parentColumns = {"name", "character"}, childColumns = {"skill", "character"}),
+            @ForeignKey(entity = Characters.class, parentColumns = "id", childColumns = "character")
+        })
 public class Inventory {
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -15,6 +19,7 @@ public class Inventory {
     private String type;
     private int rating;
     private int skill;
+    private int character;
 
     public Inventory(int id, String name, String description, double qty, String type, int rating, int skill){
         this.id=id;
@@ -84,4 +89,13 @@ public class Inventory {
     public void setSkill(int skill) {
         this.skill = skill;
     }
+
+    public int getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(int character) {
+        this.character = character;
+    }
+
 }

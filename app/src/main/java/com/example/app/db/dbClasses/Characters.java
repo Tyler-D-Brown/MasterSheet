@@ -4,8 +4,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Character")
-public class Character {
+@Entity(tableName = "Characters")
+public class Characters {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
@@ -31,12 +31,12 @@ public class Character {
     private int rightLegArmor;
     private int leftLegArmor;
 
-    public Character(int id, String name, String race, String build, double strength,
-                     double dexterity, double agility, double intelligence, double will,
-                     double constitution, double charisma, int headDamage, int torsoDamage,
-                     int rightArmDamage, int leftArmDamage, int rightLegDamage,int leftLegDamage,
-                     int headArmor, int torsoArmor, int rightArmArmor, int leftArmArmor,
-                     int rightLegArmor, int leftLegArmor) {
+    public Characters(int id, String name, String race, String build, double strength,
+                      double dexterity, double agility, double intelligence, double will,
+                      double constitution, double charisma, int headDamage, int torsoDamage,
+                      int rightArmDamage, int leftArmDamage, int rightLegDamage, int leftLegDamage,
+                      int headArmor, int torsoArmor, int rightArmArmor, int leftArmArmor,
+                      int rightLegArmor, int leftLegArmor) {
         this.id = id;
         this.name = name;
         this.race = race;
@@ -63,7 +63,7 @@ public class Character {
     }
 
     @Ignore
-    public Character(){}
+    public Characters(){}
 
     public int getId() {
         return id;

@@ -1,11 +1,14 @@
 package com.example.app.db.dbClasses;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
 @Entity(tableName = "skills", primaryKeys = {"character", "name"})
 public class Skill {
+    @NonNull
     private int character;
+    @NonNull
     private String name;
     private double rank;
     private String description;
