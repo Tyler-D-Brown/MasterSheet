@@ -9,7 +9,7 @@ import com.example.app.db.AppRepository;
 import com.example.app.db.dbClasses.Characters;
 
 public class MainViewModel extends AndroidViewModel {
-    AppRepository repository;
+    public AppRepository repository;
 
 
     public MainViewModel(@NonNull Application application){

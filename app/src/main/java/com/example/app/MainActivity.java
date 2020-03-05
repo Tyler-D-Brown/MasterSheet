@@ -59,8 +59,12 @@ public class MainActivity extends AppCompatActivity {
         final Observer<List<Characters>> characterObserver = new Observer<List<Characters>>() {
             @Override
             public void onChanged(@Nullable List<Characters> characters){
-                charactersList.clear();
-                charactersList.addAll(characters);
+                if(charactersList != null) {
+                    charactersList.clear();
+                }
+                if(characters.size() != 0) {
+                    charactersList.addAll(characters);
+                }
                 if(charactersList != null){
                     for(int i = 0; i< charactersList.size(); i++){
                         insertCharacterRow(charactersList.get(i));
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+        mainViewModel.repository.characters.observe(this, characterObserver);
     }
 
     private void insertCharacterRow(final Characters add){
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             insert.addView(newCharacterRow);
         }
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -133,4 +138,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+ */
 }
