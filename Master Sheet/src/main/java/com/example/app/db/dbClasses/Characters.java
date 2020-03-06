@@ -30,13 +30,14 @@ public class Characters {
     private int leftArmArmor;
     private int rightLegArmor;
     private int leftLegArmor;
+    private double gold;
 
     public Characters(int id, String name, String race, String build, double strength,
                       double dexterity, double agility, double intelligence, double will,
                       double constitution, double charisma, int headDamage, int torsoDamage,
                       int rightArmDamage, int leftArmDamage, int rightLegDamage, int leftLegDamage,
                       int headArmor, int torsoArmor, int rightArmArmor, int leftArmArmor,
-                      int rightLegArmor, int leftLegArmor) {
+                      int rightLegArmor, int leftLegArmor, double gold) {
         this.id = id;
         this.name = name;
         this.race = race;
@@ -60,6 +61,7 @@ public class Characters {
         this.leftArmArmor = leftArmArmor;
         this.rightLegArmor = rightLegArmor;
         this.leftLegArmor = leftLegArmor;
+        this.gold = gold;
     }
 
     @Ignore
@@ -248,4 +250,8 @@ public class Characters {
     public void setLeftLegArmor(int leftLegArmor) {
         this.leftLegArmor = leftLegArmor;
     }
+
+    public double getGold() {return gold;}
+
+    public void setGold(double gold) {this.gold = gold;}
 }

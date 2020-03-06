@@ -27,5 +27,8 @@ public interface SkillDao {
     Skill getSkill(int character, String name);
 
     @Query("SELECT * FROM skills WHERE name MATCH :selection OR description MATCH :selection OR attribute MATCH :selection")
-    List<Skill> searchSkills(String selection);
+    LiveData<List<Skill>> searchSkills(String selection);
+
+    @Query("SELECT * FROM skills WHERE character = :character AND starred = 1")
+    LiveData<List<Skill>> getStarredCharacterSkills(int character);
 }

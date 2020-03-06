@@ -13,13 +13,15 @@ public class Skill {
     private double rank;
     private String description;
     private String attribute;
+    private boolean starred;
 
-    public Skill(int character, String name, double rank, String description, String attribute){
+    public Skill(int character, String name, double rank, String description, String attribute, boolean starred){
         this.character=character;
         this.name=name;
         this.rank=rank;
         this.description=description;
         this.attribute=attribute;
+        this.starred=starred;
     }
 
     @Ignore
@@ -44,4 +46,12 @@ public class Skill {
     public String getAttribute(){return attribute;}
 
     public void setAttribute(String attribute){this.attribute=attribute;}
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
 }

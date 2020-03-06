@@ -28,19 +28,27 @@ public class AppRepository {
         return ourInstance;
     }
 
-    private AppRepository(Context context){
+    public AppRepository(Context context){
         db = AppDatabase.getInstance(context);
         characters = getAllCharacters();
     }
 
-    private LiveData<List<Characters>> getAllCharacters(){ return db.character().getCharacters(); }
+    public LiveData<List<Characters>> getAllCharacters(){ return db.character().getCharacters(); }
 
-    private LiveData<List<Skill>> getCharacterSkills(int character){
+    public LiveData<List<Skill>> getCharacterSkills(int character){
         return db.skills().getCharacterSkills(character);
     }
 
-    private LiveData<List<Inventory>> getCharacterInventory(int character){
+    public LiveData<List<Inventory>> getCharacterInventory(int character){
         return db.inventory().getCharacterInventory(character);
+    }
+
+    public LiveData<List<Skill>>getStarredCharacterSkills(int characterId){
+        return db.skills().getStarredCharacterSkills(characterId);
+    }
+
+    public LiveData<List<Inventory>>getStarredCharacterInventory(int characterId){
+        return db.inventory().getStarredCharacterInventory(characterId);
     }
 
     public Characters getCharacterById(int id){

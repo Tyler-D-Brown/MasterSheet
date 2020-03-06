@@ -20,8 +20,9 @@ public class Inventory {
     private int rating;
     private int skill;
     private int character;
+    private boolean starred;
 
-    public Inventory(int id, String name, String description, double qty, String type, int rating, int skill){
+    public Inventory(int id, String name, String description, double qty, String type, int rating, int skill, boolean starred){
         this.id=id;
         this.name=name;
         this.description=description;
@@ -29,6 +30,7 @@ public class Inventory {
         this.type=type;
         this.rating=rating;
         this.skill=skill;
+        this.starred=starred;
     }
 
     @Ignore
@@ -98,4 +100,11 @@ public class Inventory {
         this.character = character;
     }
 
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
 }

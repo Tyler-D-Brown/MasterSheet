@@ -24,8 +24,11 @@ public interface InventoryDao {
     Inventory getInventoryById(int id);
 
     @Query("SELECT * FROM Inventory WHERE name MATCH :selection OR description MATCH :selection OR type MATCH :selection")
-    List<Inventory> searchInventory(String selection);
+    LiveData<List<Inventory>> searchInventory(String selection);
 
     @Query("SELECT * FROM Inventory WHERE character = :character")
     LiveData<List<Inventory>> getCharacterInventory(int character);
+
+    @Query("SELECT * FROM Inventory WHERE character = :character AND starred = 1")
+    LiveData<List<Inventory>> getStarredCharacterInventory(int character);
 }
