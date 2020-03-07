@@ -38,7 +38,9 @@ public class Characters {
                       int rightArmDamage, int leftArmDamage, int rightLegDamage, int leftLegDamage,
                       int headArmor, int torsoArmor, int rightArmArmor, int leftArmArmor,
                       int rightLegArmor, int leftLegArmor, double gold) {
-        this.id = id;
+        if(id != -1) {
+            this.id = id;
+        }
         this.name = name;
         this.race = race;
         this.build = build;

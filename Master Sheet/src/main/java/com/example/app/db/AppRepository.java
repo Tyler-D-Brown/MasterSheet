@@ -57,6 +57,10 @@ public class AppRepository {
         return db.character().getCharacterById(id);
     }
 
+    public Skill getSkill(String name, int characterId){
+        return db.skills().getSkill(characterId, name);
+    }
+
     public void insertCharacter(final Characters characters){
         executor.execute(new Runnable(){
             @Override

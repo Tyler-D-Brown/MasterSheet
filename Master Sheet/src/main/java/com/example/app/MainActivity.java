@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.app.Utilities.Constants.CHARACTER_ID_KEY;
@@ -30,7 +31,7 @@ import static com.example.app.Utilities.Constants.CHARACTER_ID_KEY;
 public class MainActivity extends AppCompatActivity {
     private final Context context = this;
     private MainViewModel mainViewModel;
-    private List<Characters> charactersList;
+    private List<Characters> charactersList = new ArrayList<Characters>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     charactersList.clear();
                 }
                 if(characters.size() != 0) {
+                    Log.d("TAG", Integer.toString(characters.size()));
                     charactersList.addAll(characters);
                 }
                 if(charactersList != null){
