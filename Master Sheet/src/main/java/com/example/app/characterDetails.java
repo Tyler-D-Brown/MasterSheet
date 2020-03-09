@@ -94,12 +94,19 @@ public class characterDetails extends AppCompatActivity {
                     gold.setText(Double.toString(viewModel.character.getValue().getGold()));
 
                     int flatConstitution = 0;
-                    for (int i = 10; i < viewModel.character.getValue().getConstitution(); ) {
-                        if (i + 10 > viewModel.character.getValue().getConstitution()) {
+                    for (int i = 10; i <= viewModel.character.getValue().getConstitution(); ) {
+                        if ((i + 10) > ((int)viewModel.character.getValue().getConstitution())) {
                             flatConstitution = i;
+                            Log.d("assigned", "assigning flat constitution");
+                            i=i+10;
+                        }else{
+                            i = i + 10;
+                            flatConstitution=i;
                         }
-                        i = i + 10;
+                        Log.d("I:", Integer.toString(i));
+                        Log.d("Constitution", Double.toString(viewModel.character.getValue().getConstitution()));
                     }
+                    Log.d("flatConstitution", Integer.toString(flatConstitution));
 
                     TextView maxHead = findViewById(R.id.maxHeadHealth);
                     TextView maxTorso = findViewById(R.id.maxTorsoHealth);
@@ -110,16 +117,18 @@ public class characterDetails extends AppCompatActivity {
 
                     int arms;
                     int legs;
-                    if (flatConstitution * .15 != (int) (flatConstitution * .15)) {
-                        arms = (int) (flatConstitution * .15) - 1;
-                        legs = (int) (flatConstitution * .15);
+                    if (flatConstitution * .15 != (int)(flatConstitution * .15)) {
+                        arms = (int)(((double)flatConstitution * .15) - 1);
+                        legs = (int)((double)flatConstitution * .15);
                     } else {
-                        arms = (int) (flatConstitution * .15);
-                        legs = (int) (flatConstitution * .15);
+                        arms = (int)((double)flatConstitution * .15);
+                        legs = (int)((double)flatConstitution * .15);
                     }
+                    Log.d("head health double", Double.toString((double)flatConstitution*.1));
+                    Log.d("head health", Integer.toString((int)((double)flatConstitution * .1)));
 
-                    maxHead.setText(Integer.toString((int)(flatConstitution * .1)));
-                    maxTorso.setText(Integer.toString((int)(flatConstitution * .3)));
+                    maxHead.setText(Integer.toString((int)((double)flatConstitution * .1)));
+                    maxTorso.setText(Integer.toString((int)((double)flatConstitution * .3)));
                     maxLeftArm.setText(Integer.toString(arms));
                     maxRightArm.setText(Integer.toString(arms));
                     maxLeftLeg.setText(Integer.toString(legs));
@@ -127,10 +136,10 @@ public class characterDetails extends AppCompatActivity {
 
                     headHealth.setText(Integer.toString(viewModel.character.getValue().getHeadDamage()));
                     torsoHealth.setText(Integer.toString(viewModel.character.getValue().getTorsoDamage()));
-                    leftArmHealth.setText(Integer.toString(arms - viewModel.character.getValue().getLeftArmDamage()));
-                    rightArmHealth.setText(Integer.toString(arms - viewModel.character.getValue().getRightArmDamage()));
-                    leftLegHealth.setText(Integer.toString(legs - viewModel.character.getValue().getLeftLegDamage()));
-                    rightLegHealth.setText(Integer.toString(legs - viewModel.character.getValue().getRightLegDamage()));
+                    leftArmHealth.setText(Integer.toString(viewModel.character.getValue().getLeftArmDamage()));
+                    rightArmHealth.setText(Integer.toString(viewModel.character.getValue().getRightArmDamage()));
+                    leftLegHealth.setText(Integer.toString(viewModel.character.getValue().getLeftLegDamage()));
+                    rightLegHealth.setText(Integer.toString(viewModel.character.getValue().getRightLegDamage()));
 
                     headArmor.setText(Integer.toString(viewModel.character.getValue().getHeadArmor()));
                     torsoArmor.setText(Integer.toString(viewModel.character.getValue().getTorsoArmor()));
@@ -168,7 +177,7 @@ public class characterDetails extends AppCompatActivity {
                 }
             }
         });
-        FloatingActionButton save = findViewById(R.id.addInventory);
+        FloatingActionButton save = findViewById(R.id.saveCharacter);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

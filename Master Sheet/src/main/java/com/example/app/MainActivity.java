@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         final Observer<List<Characters>> characterObserver = new Observer<List<Characters>>() {
             @Override
             public void onChanged(@Nullable List<Characters> characters){
-                if(charactersList != null) {
+                if(charactersList.size() != 0) {
                     charactersList.clear();
                 }
                 if(characters.size() != 0) {
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     charactersList.addAll(characters);
                 }
                 if(charactersList != null){
-                    for(int i = 0; i< charactersList.size(); i++){
+                    for(int i = 0; i < charactersList.size(); i++){
                         insertCharacterRow(charactersList.get(i));
                     }
                 }
@@ -106,16 +106,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View Button){
                 mainViewModel.deleteCharacter(mainViewModel.getCharacter(add.getId()));
+                initViewModel();
             }
         });
         newCharacterRow.setId(add.getId());
-        ViewGroup insert = layout;
-        View exists = insert.findViewById(add.getId());
+        View exists = layout.findViewById(add.getId());
         if(exists == null){
-            insert.addView(newCharacterRow);
+            layout.addView(newCharacterRow);
         }else{
-            ((ViewGroup)insert.getParent()).removeView(exists);
-            insert.addView(newCharacterRow);
+            ((ViewGroup) exists.getParent()).removeView(exists);
+            layout.addView(newCharacterRow);
         }
     }
 /*
