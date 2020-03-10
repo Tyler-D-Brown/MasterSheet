@@ -1,6 +1,7 @@
 package com.example.app.ViewModel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,7 +16,7 @@ import java.util.concurrent.Executors;
 
 public class SkillListViewModel extends AndroidViewModel {
     public AppRepository repository;
-    public MutableLiveData<String> characterName = new MutableLiveData<>();
+    public MutableLiveData<Characters> character = new MutableLiveData<>();
     private Executor executor = Executors.newSingleThreadExecutor();
 
     public SkillListViewModel(@NonNull Application application){
@@ -31,7 +32,7 @@ public class SkillListViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                characterName.postValue(repository.getCharacterById(id).getName());
+                character.postValue(repository.getCharacterById(id));
             }
         });
     }
@@ -42,59 +43,83 @@ public class SkillListViewModel extends AndroidViewModel {
 
     public int getDice(Skill skill){
         String attribute = skill.getAttribute();
-        Characters character = repository.getCharacterById(skill.getCharacter());
         int attributeDice = 0;
         double att;
         switch (attribute) {
             case "Strength":
-                att = character.getStrength();
+                att = character.getValue().getStrength();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }
+                else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Agility":
-                att = character.getAgility();
+                att = character.getValue().getAgility();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }
+                else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Dexterity":
-                att = character.getDexterity();
+                att = character.getValue().getDexterity();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }
+                else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Constitution":
-                att = character.getConstitution();
+                att = character.getValue().getConstitution();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }
+                else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Intelligence":
-                att = character.getIntelligence();
+                att = character.getValue().getIntelligence();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }
+                else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Will":
-                att = character.getWill();
+                att = character.getValue().getWill();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
+                else{
+                    attributeDice = (int)(att/10);
+                }
                 break;
             case "Charisma":
-                att = character.getCharisma();
+                att = character.getValue().getCharisma();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }
+                else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
         }
         double rank = skill.getRank();
-        if(rank/10 < (int)(rank/10)) {
-            return attributeDice + ((int)(rank/10)-1);
+        Log.d("getDice: ", Integer.toString(attributeDice));
+        Log.d("rank: ", Double.toString(rank));
+        if(rank < (int)rank) {
+            Log.d("TAG", "rounding down");
+            return attributeDice + (int)rank-1;
         }
         else{
-            return attributeDice + ((int)(rank/10));
+            Log.d("TAG", Integer.toString(attributeDice + (int)rank));
+            return attributeDice + (int)rank;
         }
     }
 }

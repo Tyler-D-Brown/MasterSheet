@@ -61,6 +61,15 @@ public class AppRepository {
         return db.skills().getSkill(characterId, name);
     }
 
+    public void saveSkill(final Skill save){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.skills().insertSkill(save);
+            }
+        });
+    }
+
     public void trainSkill(String name, int character){
         Skill skill = db.skills().getSkill(character, name);
         skill.setRank(skill.getRank()+.1);

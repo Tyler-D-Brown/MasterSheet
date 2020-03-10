@@ -51,7 +51,7 @@ public class skillList extends AppCompatActivity {
         h.postDelayed(new Runnable() {
                           @Override
                           public void run() {
-                                      heading.setText(viewModel.characterName.getValue().concat("'s Skills"));
+                  heading.setText(viewModel.character.getValue().getName().concat("'s Skills"));
                                   }
                       }, 50);
         FloatingActionButton fab = findViewById(R.id.add);
@@ -60,7 +60,7 @@ public class skillList extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent = new Intent(context, skillDetails.class);
             intent.putExtra(CHARACTER_ID_KEY, characterId);
-            int id = -1;
+            String id = "";
             intent.putExtra(SKILL_ID_KEY, id);
             try{
                 context.startActivity(intent);
@@ -99,11 +99,13 @@ public class skillList extends AppCompatActivity {
         final LinearLayout layout = findViewById(R.id.rowContainer);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View newSkillRow = inflater.inflate(R.layout.cards, null);
-        Button button = newSkillRow.findViewById(R.id.title);
+        View newSkillRow = inflater.inflate(R.layout.searchable_list_card, null);
+        Button button = newSkillRow.findViewById(R.id.name);
         button.setText(add.getName());
-        EditText dice = newSkillRow.findViewById(R.id.dice);
-        dice.setText(viewModel.getDice(add));
+        TextView dice = newSkillRow.findViewById(R.id.dice);
+        int die = viewModel.getDice(add);
+        Log.d("total Dice to roll: ", Integer.toString(die));
+        dice.setText(Integer.toString(die));
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View button){
