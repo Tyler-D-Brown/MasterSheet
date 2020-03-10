@@ -52,13 +52,11 @@ public class CharacterDetailsModel extends AndroidViewModel {
     }
 
     public void train(String skillName, int characterId){
-        Skill skill = repository.getSkill(skillName, characterId);
-
-        skill.setRank(skill.getRank()+.1);
+        repository.trainSkill(skillName, characterId);
     }
 
     public void train(Skill skill){
-        skill.setRank(skill.getRank()+.1);
+        repository.trainSkill(skill.getName(), skill.getCharacter());
     }
 
     public int getDice(String skillName, int characterId){

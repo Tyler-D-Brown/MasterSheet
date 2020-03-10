@@ -9,26 +9,16 @@
     android:layout_marginTop="4dp"
     >
 
-    <TextView
-        android:id="@+id/nameHeading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="name"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/name"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintBottom_toTopOf="@+id/name"
-        />
-
-    <TextView
+    <Button
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:text="Placeholder"
-        app:layout_constraintEnd_toStartOf="@+id/dice"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameHeading"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/diceHeading"
@@ -38,29 +28,30 @@
         android:textAlignment="center"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/dice"
-        app:layout_constraintEnd_toEndOf="@+id/dice"
-        app:layout_constraintStart_toStartOf="@+id/dice"
+        app:layout_constraintEnd_toStartOf="@+id/train"
+        app:layout_constraintStart_toEndOf="@+id/name"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/dice"
-        android:text="placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="-"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/train"
         app:layout_constraintStart_toEndOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/diceHeading"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/diceHeading" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/train"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dice"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/arrow_up_float" />
 

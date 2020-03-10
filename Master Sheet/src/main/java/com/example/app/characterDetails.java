@@ -156,6 +156,7 @@ public class characterDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, skillList.class);
+                intent.putExtra(CHARACTER_ID_KEY, characterId);
                 try{
                     context.startActivity(intent);
                 }
@@ -169,6 +170,7 @@ public class characterDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, inventoryList.class);
+                intent.putExtra(CHARACTER_ID_KEY, characterId);
                 try{
                     context.startActivity(intent);
                 }

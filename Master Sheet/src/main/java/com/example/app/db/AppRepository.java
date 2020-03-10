@@ -61,6 +61,12 @@ public class AppRepository {
         return db.skills().getSkill(characterId, name);
     }
 
+    public void trainSkill(String name, int character){
+        Skill skill = db.skills().getSkill(character, name);
+        skill.setRank(skill.getRank()+.1);
+        db.skills().insertSkill(skill);
+    }
+
     public void insertCharacter(final Characters characters){
         executor.execute(new Runnable(){
             @Override
@@ -70,11 +76,11 @@ public class AppRepository {
         });
     }
 
-    public void deleteCharacter(final Characters character){
+    public void deleteCharacter(final int character){
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                db.character().deleteCharacter(character);
+                db.character().deleteCharacter(db.character().getCharacterById(character));
             }
         });
     }

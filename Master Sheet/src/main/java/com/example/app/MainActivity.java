@@ -105,8 +105,10 @@ public class MainActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View Button){
-                mainViewModel.deleteCharacter(mainViewModel.getCharacter(add.getId()));
+                mainViewModel.deleteCharacter(add.getId());
                 initViewModel();
+                View exists = layout.findViewById(add.getId());
+                ((ViewGroup) exists.getParent()).removeView(exists);
             }
         });
         newCharacterRow.setId(add.getId());

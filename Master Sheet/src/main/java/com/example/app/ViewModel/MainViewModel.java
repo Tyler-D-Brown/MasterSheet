@@ -21,7 +21,7 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getCharacterById(id);
     }
 
-    public void deleteCharacter(Characters character){
+    public void deleteCharacter(int character){
         repository.deleteCharacter(character);
     }
 }
