@@ -93,4 +93,13 @@ public class AppRepository {
             }
         });
     }
+
+    public void deleteSkill(final Skill skill) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.skills().deleteSkill(skill);
+            }
+        });
+    }
 }

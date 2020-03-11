@@ -7,7 +7,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.app.db.AppRepository;
-import com.example.app.db.dbClasses.Characters;
 import com.example.app.db.dbClasses.Skill;
 
 import java.util.concurrent.Executor;
@@ -25,5 +24,18 @@ public class SkillDetailViewModel extends AndroidViewModel {
 
     public void saveSkill(Skill newSkill) {
         repository.saveSkill(newSkill);
+    }
+
+    public void getSkill(final String skillId, final int characterId) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                skill.postValue(repository.getSkill(skillId, characterId));
+            }
+        });
+    }
+
+    public void deleteSkill() {
+        repository.deleteSkill(skill.getValue());
     }
 }

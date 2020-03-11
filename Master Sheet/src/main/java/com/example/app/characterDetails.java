@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,6 +25,7 @@ import com.example.app.db.dbClasses.Inventory;
 import com.example.app.db.dbClasses.Skill;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.app.Utilities.Constants.CHARACTER_ID_KEY;
@@ -32,8 +34,8 @@ public class characterDetails extends AppCompatActivity {
     private final Context context = this;
     private CharacterDetailsModel viewModel;
     private int characterId = 0;
-    private List<Skill> starredSkills;
-    private List<Inventory> starredInventory;
+    private List<Skill> starredSkills = new ArrayList<Skill>();
+    private List<Inventory> starredInventory = new ArrayList<Inventory>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,15 +149,15 @@ public class characterDetails extends AppCompatActivity {
                     rightArmArmor.setText(Integer.toString(viewModel.character.getValue().getRightArmArmor()));
                     leftLegArmor.setText(Integer.toString(viewModel.character.getValue().getLeftLegArmor()));
                     rightLegArmor.setText(Integer.toString(viewModel.character.getValue().getRightLegArmor()));
+                    initViewModel();
                 }
             }, 50);
         }
-        initViewModel();
         FloatingActionButton addSkill = findViewById(R.id.addSkill);
         addSkill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, skillList.class);
+                Intent intent = new Intent(context, SkillList.class);
                 intent.putExtra(CHARACTER_ID_KEY, characterId);
                 try{
                     context.startActivity(intent);
@@ -183,14 +185,10 @@ public class characterDetails extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveCharacter();
-                Intent intent = new Intent(context, MainActivity.class);
-                try{
-                    context.startActivity(intent);
+                if(saveCharacter()){
+                    finish();
                 }
-                catch(Exception e){
-                    Log.d("Except", e.toString());
-                }
+
             }
         });
     }
@@ -259,7 +257,9 @@ public class characterDetails extends AppCompatActivity {
         final Observer<List<Skill>> skillObserver = new Observer<List<Skill>>() {
             @Override
             public void onChanged(@Nullable List<Skill> skills){
-                starredSkills.clear();
+                if(starredSkills.size()!=0) {
+                    starredSkills.clear();
+                }
                 starredSkills.addAll(skills);
                 if(starredInventory != null){
                     for (int i = 0; i<starredInventory.size(); i++){
@@ -276,7 +276,9 @@ public class characterDetails extends AppCompatActivity {
         final Observer<List<Inventory>> inventoryObserver = new Observer<List<Inventory>>(){
             @Override
             public void onChanged(@Nullable List<Inventory> inventory) {
-                starredInventory.clear();
+                if(starredInventory.size() != 0) {
+                    starredInventory.clear();
+                }
                 starredInventory.addAll(inventory);
                 if (starredInventory != null) {
                     for (int i = 0; i < starredInventory.size(); i++) {
@@ -290,6 +292,8 @@ public class characterDetails extends AppCompatActivity {
                 }
             }
         };
+        viewModel.starredSkills.observe(this, skillObserver);
+        viewModel.starredInventory.observe(this, inventoryObserver);
     }
 
     public void insertRow(final Inventory inventory){
@@ -318,17 +322,26 @@ public class characterDetails extends AppCompatActivity {
 
         View newRow = inflater.inflate(R.layout.favorite_cards, null);
         TextView nameHeading = newRow.findViewById(R.id.nameHeading);
-        nameHeading.setText("Item Name");
+        nameHeading.setText("Skill Name");
         TextView name = newRow.findViewById(R.id.name);
         name.setText(addSkill.getName());
         TextView rank = newRow.findViewById(R.id.dice);
         rank.setText(Integer.toString(viewModel.getDice(addSkill)));
-        final TextView train = newRow.findViewById(R.id.train);
+        final FloatingActionButton train = newRow.findViewById(R.id.train);
         train.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 viewModel.train(addSkill);
             }
         });
+        newRow.setTag(addSkill.getName());
+        View exists = contain.findViewWithTag(addSkill.getName());
+        if(exists == null){
+            contain.addView(newRow);
+        }else{
+            ((ViewGroup) exists.getParent()).removeView(exists);
+            contain.addView(newRow);
+        }
     }
 }

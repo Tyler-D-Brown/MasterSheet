@@ -27,7 +27,7 @@
         </activity>
 
         <activity
-            android:name=".skillList"
+            android:name=".SkillList"
             android:label="app"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

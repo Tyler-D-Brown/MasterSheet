@@ -42,6 +42,7 @@ public class SkillListViewModel extends AndroidViewModel {
     }
 
     public int getDice(Skill skill){
+
         String attribute = skill.getAttribute();
         int attributeDice = 0;
         double att;

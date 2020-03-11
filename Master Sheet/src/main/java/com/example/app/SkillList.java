@@ -32,11 +32,12 @@ import java.util.concurrent.Executors;
 import static com.example.app.Utilities.Constants.CHARACTER_ID_KEY;
 import static com.example.app.Utilities.Constants.SKILL_ID_KEY;
 
-public class skillList extends AppCompatActivity {
+public class SkillList extends AppCompatActivity {
     private final Context context = this;
     private SkillListViewModel viewModel;
     private List<Skill> skillList = new ArrayList<Skill>();
     int characterId;
+    private Executor executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,19 +59,20 @@ public class skillList extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, skillDetails.class);
-            intent.putExtra(CHARACTER_ID_KEY, characterId);
-            String id = "";
-            intent.putExtra(SKILL_ID_KEY, id);
-            try{
-                context.startActivity(intent);
+                Intent intent = new Intent(context, skillDetails.class);
+                intent.putExtra(CHARACTER_ID_KEY, characterId);
+                String id = "";
+                intent.putExtra(SKILL_ID_KEY, id);
+                try{
+                    context.startActivity(intent);
+                }
+                catch(Exception e){
+                    Log.d("Except", e.toString());
+                }
+                initViewModel();
             }
-            catch(Exception e){
-                Log.d("Except", e.toString());
-            }
-        }
-    });
-}
+        });
+    }
 
     private void initViewModel() {
         Log.d("TAG", "initViewModel: ");
@@ -96,44 +98,55 @@ public class skillList extends AppCompatActivity {
     }
 
     private void insertRow(final Skill add){
-        final LinearLayout layout = findViewById(R.id.rowContainer);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final LinearLayout layout = findViewById(R.id.rowContainer);
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View newSkillRow = inflater.inflate(R.layout.searchable_list_card, null);
-        Button button = newSkillRow.findViewById(R.id.name);
-        button.setText(add.getName());
-        TextView dice = newSkillRow.findViewById(R.id.dice);
-        int die = viewModel.getDice(add);
-        Log.d("total Dice to roll: ", Integer.toString(die));
-        dice.setText(Integer.toString(die));
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View button){
-                Intent intent = new Intent(getBaseContext(), skillDetails.class);
-                intent.putExtra(SKILL_ID_KEY, add.getName());
-                try{
-                    context.startActivity(intent);
-                }
-                catch(Exception e){
-                    Log.d("Except", e.toString());
+                View newSkillRow = inflater.inflate(R.layout.searchable_list_card, null);
+                Button button = newSkillRow.findViewById(R.id.name);
+                button.setText(add.getName());
+                TextView dice = newSkillRow.findViewById(R.id.dice);
+                int die = viewModel.getDice(add);
+                Log.d("total Dice to roll: ", Integer.toString(die));
+                dice.setText(Integer.toString(die));
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View button) {
+                        Intent intent = new Intent(getBaseContext(), skillDetails.class);
+                        intent.putExtra(SKILL_ID_KEY, add.getName());
+                        intent.putExtra(CHARACTER_ID_KEY, add.getCharacter());
+                        try {
+                            context.startActivity(intent);
+                        } catch (Exception e) {
+                            Log.d("Except", e.toString());
+                        }
+                    }
+                });
+                FloatingActionButton train = newSkillRow.findViewById(R.id.train);
+                train.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View Button) {
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                              viewModel.repository.trainSkill(add.getName(), add.getCharacter());
+                                          }
+                                      });
+                        initViewModel();
+                    }
+                });
+                newSkillRow.setTag(add.getName());
+                View exists = layout.findViewWithTag(add.getName());
+                if (exists == null) {
+                    layout.addView(newSkillRow);
+                } else {
+                    ((ViewGroup) exists.getParent()).removeView(exists);
+                    layout.addView(newSkillRow);
                 }
             }
-        });
-        FloatingActionButton train = newSkillRow.findViewById(R.id.train);
-        train.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View Button){
-                viewModel.repository.trainSkill(add.getName(), add.getCharacter());
-                initViewModel();
-            }
-        });
-        newSkillRow.setTag(add.getName());
-        View exists = layout.findViewWithTag(add.getName());
-        if(exists == null){
-            layout.addView(newSkillRow);
-        }else{
-            ((ViewGroup) exists.getParent()).removeView(exists);
-            layout.addView(newSkillRow);
-        }
+        }, 50);
     }
 }

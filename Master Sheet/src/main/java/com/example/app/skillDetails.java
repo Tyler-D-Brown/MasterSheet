@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,17 +38,17 @@ public class skillDetails extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skill_details);
-        initViewModel();
         Bundle intent = getIntent().getExtras();
         characterId = intent.getInt(CHARACTER_ID_KEY);
         skillId = intent.getString(SKILL_ID_KEY);
+        initViewModel();
     }
 
     public void initViewModel(){
         viewModel = ViewModelProviders.of(this).get(SkillDetailViewModel.class);
-        Spinner attribute = (Spinner) findViewById(R.id.governingAttribute);
+        final Spinner attribute = (Spinner) findViewById(R.id.governingAttribute);
         attribute.setOnItemSelectedListener(this);
-        List<String> attributesList = new ArrayList<String>();
+        final List<String> attributesList = new ArrayList<String>();
         attributesList.add("Strength");
         attributesList.add("Dexterity");
         attributesList.add("Agility");
@@ -62,9 +63,43 @@ public class skillDetails extends AppCompatActivity implements AdapterView.OnIte
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveSkill();
+                if(saveSkill()){
+                    finish();
+                }
             }
         });
+        FloatingActionButton delete = findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.deleteSkill();
+                finish();
+            }
+        });
+        if(!skillId.equals("")){
+            viewModel.getSkill(skillId, characterId);
+            Handler h = new Handler();
+            h.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (attributesList.indexOf(viewModel.skill.getValue().getAttribute()) != -1) {
+                        attribute.setSelection(attributesList.indexOf(viewModel.skill.getValue().getAttribute()));
+                    }
+                    EditText name = (EditText) findViewById(R.id.skillName);
+                    EditText rank = (EditText) findViewById(R.id.rank);
+                    EditText description = (EditText) findViewById(R.id.description);
+                    CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
+                    Log.e("CheckBox", Boolean.toString(favorited.isChecked()));
+                    name.setText(viewModel.skill.getValue().getName());
+                    rank.setText(Double.toString(viewModel.skill.getValue().getRank()));
+                    description.setText(viewModel.skill.getValue().getDescription());
+                    if (viewModel.skill.getValue().isStarred()) {
+                        favorited.setChecked(true);
+                    }
+                }
+            }, 50);
+
+        }
     }
 
     @Override
@@ -78,7 +113,7 @@ public class skillDetails extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void saveSkill(){
+    public boolean saveSkill(){
         CheckBox favorited = findViewById(R.id.favorite);
         boolean favorite;
         favorite = favorited.isChecked();
@@ -94,5 +129,6 @@ public class skillDetails extends AppCompatActivity implements AdapterView.OnIte
 
         Log.d("Skill Name", newSkill.getName());
         viewModel.saveSkill(newSkill);
+        return true;
     }
 }

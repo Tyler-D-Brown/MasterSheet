@@ -24,6 +24,7 @@ public class CharacterDetailsModel extends AndroidViewModel {
     public LiveData<List<Inventory>> starredInventory;
     public LiveData<List<Skill>> starredSkills;
     private Executor executor = Executors.newSingleThreadExecutor();
+    MutableLiveData<Skill> skill = new MutableLiveData<>();
 
     public CharacterDetailsModel(@NonNull Application application){
         super(application);
@@ -51,65 +52,79 @@ public class CharacterDetailsModel extends AndroidViewModel {
         });
     }
 
-    public void train(String skillName, int characterId){
-        repository.trainSkill(skillName, characterId);
+    public void train(final String skillName, final int characterId){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repository.trainSkill(skillName, characterId);
+            }
+        });
     }
 
-    public void train(Skill skill){
-        repository.trainSkill(skill.getName(), skill.getCharacter());
+    public void train(final Skill skill){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repository.trainSkill(skill.getName(), skill.getCharacter());
+            }
+        });
     }
 
-    public int getDice(String skillName, int characterId){
-        Skill skill = repository.getSkill(skillName, characterId);
-        String attribute = skill.getAttribute();
-        Characters character = repository.getCharacterById(characterId);
+    public int getDice(final String skillName, final int characterId){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                skill.postValue(repository.getSkill(skillName, characterId));
+            }
+        });
+        String attribute = skill.getValue().getAttribute();
         int attributeDice = 0;
         double att;
         switch (attribute) {
             case "Strength":
-                att = character.getStrength();
+                att = character.getValue().getStrength();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
                 break;
             case "Agility":
-                att = character.getAgility();
+                att = character.getValue().getAgility();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
                 break;
             case "Dexterity":
-                att = character.getDexterity();
+                att = character.getValue().getDexterity();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
                 break;
             case "Constitution":
-                att = character.getConstitution();
+                att = character.getValue().getConstitution();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
                 break;
             case "Intelligence":
-                att = character.getIntelligence();
+                att = character.getValue().getIntelligence();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
                 break;
             case "Will":
-                att = character.getWill();
+                att = character.getValue().getWill();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
                 break;
             case "Charisma":
-                att = character.getCharisma();
+                att = character.getValue().getCharisma();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }
                 break;
         }
-        double rank = skill.getRank();
+        double rank = skill.getValue().getRank();
         if(rank/10 < (int)(rank/10)) {
             return attributeDice + ((int)(rank/10)-1);
         }
@@ -120,59 +135,73 @@ public class CharacterDetailsModel extends AndroidViewModel {
 
     public int getDice(Skill skill){
         String attribute = skill.getAttribute();
-        Characters character = repository.getCharacterById(skill.getCharacter());
         int attributeDice = 0;
         double att;
+        Log.d("Attribute:", attribute);
         switch (attribute) {
             case "Strength":
-                att = character.getStrength();
+                att = character.getValue().getStrength();
+                Log.d("Strength:", Double.toString(att));
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Agility":
-                att = character.getAgility();
+                att = character.getValue().getAgility();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Dexterity":
-                att = character.getDexterity();
+                att = character.getValue().getDexterity();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Constitution":
-                att = character.getConstitution();
+                att = character.getValue().getConstitution();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Intelligence":
-                att = character.getIntelligence();
+                att = character.getValue().getIntelligence();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Will":
-                att = character.getWill();
+                att = character.getValue().getWill();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Charisma":
-                att = character.getCharisma();
+                att = character.getValue().getCharisma();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
         }
         double rank = skill.getRank();
-        if(rank/10 < (int)(rank/10)) {
-            return attributeDice + ((int)(rank/10)-1);
-        }
-        else{
-            return attributeDice + ((int)(rank/10));
+        if(rank < (int)(rank)) {
+            return attributeDice + ((int)rank-1);
+        }else{
+            return attributeDice + (int)rank;
         }
     }
 
