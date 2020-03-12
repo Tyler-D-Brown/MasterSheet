@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="CharacterName Skill"
+        android:text="CharacterName Item"
         android:textSize="16sp"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/search"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/heading" />
 
     <TextView
-        android:id="@+id/skillNameHeading"
+        android:id="@+id/nameHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -45,54 +45,54 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <EditText
-        android:id="@+id/skillName"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
-        app:layout_constraintTop_toBottomOf="@+id/skillNameHeading"
+        app:layout_constraintTop_toBottomOf="@+id/nameHeading"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/rankHeading"
+        android:id="@+id/quantityHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="Skill"
-        app:layout_constraintTop_toBottomOf="@+id/skillName"
+        android:text="Quantity"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <EditText
-        android:id="@+id/rank"
+        android:id="@+id/quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="3"
         android:inputType="numberDecimal"
-        app:layout_constraintTop_toBottomOf="@+id/rankHeading"
+        app:layout_constraintTop_toBottomOf="@+id/quantityHeading"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/attributeHeading"
+        android:id="@+id/typeHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="Governing Attribute"
-        app:layout_constraintTop_toBottomOf="@+id/rank"
+        android:text="Item Type"
+        app:layout_constraintTop_toBottomOf="@+id/quantity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <Spinner
-        android:id="@+id/governingAttribute"
+        android:id="@+id/type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/attributeHeading" />
+        app:layout_constraintTop_toBottomOf="@+id/typeHeading" />
 
     <TextView
         android:id="@+id/descriptionHeading"
@@ -102,7 +102,7 @@
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/governingAttribute"/>
+        app:layout_constraintTop_toBottomOf="@+id/type"/>
 
     <EditText
         android:id="@+id/description"
@@ -150,6 +150,48 @@
         app:layout_constraintBottom_toTopOf="@+id/favorite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/rankHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Skill"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description"/>
+
+    <EditText
+        android:id="@+id/rank"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:ems="5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rankHeading"/>
+
+    <TextView
+        android:id="@+id/locationHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Armor Location"
+        app:layout_constraintTop_toBottomOf="@+id/rank"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Spinner
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationHeading" />
 
     <CheckBox
         android:id="@+id/favorite"
