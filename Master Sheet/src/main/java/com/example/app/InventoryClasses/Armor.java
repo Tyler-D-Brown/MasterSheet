@@ -1,5 +1,7 @@
 package com.example.app.InventoryClasses;
 
+import com.example.app.db.dbClasses.Inventory;
+
 public class Armor extends Item{
     private int rating;
     private String armorLocation;
@@ -8,6 +10,18 @@ public class Armor extends Item{
         super(id, name, description, qty, character);
         this.rating=rating;
         this.armorLocation=armorLocation;
+    }
+
+    public Armor(){
+        super(-1, "", "", -1, -1);
+        this.rating = -1;
+        this.armorLocation = "";
+    }
+
+    public Armor(Inventory value) {
+        super(value.getId(), value.getName(), value.getDescription(), value.getQty(), value.getCharacter());
+        this.rating = value.getRating();
+        this.armorLocation = value.getArmorLocation();
     }
 
     public int getRating() {

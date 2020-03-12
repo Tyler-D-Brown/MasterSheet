@@ -1,5 +1,7 @@
 package com.example.app.InventoryClasses;
 
+import com.example.app.db.dbClasses.Inventory;
+
 public class Item {
     private int id;
     private String name;
@@ -15,8 +17,20 @@ public class Item {
         this.character = character;
     }
 
-    public Item(){
+    public Item(Inventory item){
+        this.id = item.getId();
+        this.name=item.getName();
+        this.description=item.getDescription();
+        this.qty=item.getQty();
+        this.character=item.getCharacter();
+    }
 
+    public Item(){
+        this.id = -1;
+        this.name = "";
+        this.description = "";
+        this.qty = -1;
+        this.character = -1;
     }
 
     public int getId() {

@@ -102,4 +102,8 @@ public class AppRepository {
             }
         });
     }
+
+    public Inventory getItemById(int itemId) {
+        return db.inventory().getInventoryById(itemId);
+    }
 }
