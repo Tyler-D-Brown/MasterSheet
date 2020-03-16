@@ -10,7 +10,9 @@ public class Item {
     private int character;
 
     public Item(int id, String name, String description, double qty, int character) {
-        this.id = id;
+        if(id !=-1) {
+            this.id = id;
+        }
         this.name = name;
         this.description = description;
         this.qty = qty;
@@ -18,7 +20,9 @@ public class Item {
     }
 
     public Item(Inventory item){
-        this.id = item.getId();
+        if(id !=-1) {
+            this.id = item.getId();
+        }
         this.name=item.getName();
         this.description=item.getDescription();
         this.qty=item.getQty();
@@ -26,11 +30,6 @@ public class Item {
     }
 
     public Item(){
-        this.id = -1;
-        this.name = "";
-        this.description = "";
-        this.qty = -1;
-        this.character = -1;
     }
 
     public int getId() {

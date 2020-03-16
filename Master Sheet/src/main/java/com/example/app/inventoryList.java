@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -98,6 +99,15 @@ public class inventoryList extends AppCompatActivity {
     }
 
     private void insertRow(final Inventory add){
+        final MutableLiveData<Skill> itemSkill = new MutableLiveData<>();
+        if(add.getType().equals("Weapon")) {
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    itemSkill.postValue(viewModel.repository.getSkill(add.getSkillName(), characterId));
+                }
+            });
+        }
         Handler h = new Handler();
         h.postDelayed(new Runnable() {
             @Override
@@ -105,17 +115,23 @@ public class inventoryList extends AppCompatActivity {
                 final LinearLayout layout = findViewById(R.id.rowContainer);
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                View newSkillRow = inflater.inflate(R.layout.searchable_list_card, null);
+                final View newSkillRow = inflater.inflate(R.layout.searchable_list_card, null);
                 Button button = newSkillRow.findViewById(R.id.name);
                 button.setText(add.getName());
-                TextView dice = newSkillRow.findViewById(R.id.dice);
-                int die = viewModel.getDice(viewModel.repository.getSkill(add.getSkillName(), characterId));
-                dice.setText(Integer.toString(die));
+                Log.d(add.getName(), add.getType());
+                if(add.getType().equals("Weapon")){
+                    TextView dice = newSkillRow.findViewById(R.id.dice);
+                    int die = viewModel.getDice(itemSkill.getValue());
+                    dice.setText(Integer.toString(die));
+                }else{
+                    TextView dice = newSkillRow.findViewById(R.id.dice);
+                    dice.setText("N/A");
+                }
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View button) {
-                        Intent intent = new Intent(getBaseContext(), skillDetails.class);
-                        intent.putExtra(SKILL_ID_KEY, add.getName());
+                        Intent intent = new Intent(getBaseContext(), inventoryDetails.class);
+                        intent.putExtra(INVENTORY_ID_KEY, add.getId());
                         intent.putExtra(CHARACTER_ID_KEY, add.getCharacter());
                         try {
                             context.startActivity(intent);
@@ -124,19 +140,21 @@ public class inventoryList extends AppCompatActivity {
                         }
                     }
                 });
-                FloatingActionButton train = newSkillRow.findViewById(R.id.train);
-                train.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View Button) {
-                        executor.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                viewModel.repository.trainSkill(add.getName(), add.getCharacter());
-                            }
-                        });
-                        initViewModel();
-                    }
-                });
+                if(add.getType().equals("Weapon")){
+                    FloatingActionButton train = newSkillRow.findViewById(R.id.train);
+                    train.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View Button) {
+                            executor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    viewModel.repository.trainSkill(add.getSkillName(), add.getCharacter());
+                                }
+                            });
+                            initViewModel();
+                        }
+                    });
+                }
                 newSkillRow.setTag(add.getName());
                 View exists = layout.findViewWithTag(add.getName());
                 if (exists == null) {

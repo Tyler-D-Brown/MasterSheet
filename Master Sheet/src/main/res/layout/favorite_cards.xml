@@ -11,32 +11,37 @@
 
     <TextView
         android:id="@+id/nameHeading"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="name"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/dice"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/name"
-        app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintBottom_toTopOf="@+id/name"
-        />
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Placeholder"
-        app:layout_constraintEnd_toStartOf="@+id/dice"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@+id/nameHeading"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintEnd_toEndOf="@+id/nameHeading"
+        app:layout_constraintStart_toStartOf="@+id/nameHeading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <TextView
         android:id="@+id/diceHeading"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Dice"
         android:textAlignment="center"
         android:textSize="14sp"
+        android:layout_marginRight="15dp"
         app:layout_constraintBottom_toTopOf="@+id/dice"
         app:layout_constraintEnd_toStartOf="@+id/train"
         app:layout_constraintStart_toEndOf="@+id/name"
@@ -48,6 +53,7 @@
         android:text="placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
         app:layout_constraintEnd_toStartOf="@+id/train"
         app:layout_constraintStart_toEndOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/diceHeading"
@@ -57,10 +63,10 @@
         android:id="@+id/train"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dice"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/arrow_up_float" />
 

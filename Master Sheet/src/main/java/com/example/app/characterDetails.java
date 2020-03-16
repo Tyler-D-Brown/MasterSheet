@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -27,6 +28,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static com.example.app.Utilities.Constants.CHARACTER_ID_KEY;
 
@@ -36,6 +39,7 @@ public class characterDetails extends AppCompatActivity {
     private int characterId = 0;
     private List<Skill> starredSkills = new ArrayList<Skill>();
     private List<Inventory> starredInventory = new ArrayList<Inventory>();
+    private Executor executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +48,8 @@ public class characterDetails extends AppCompatActivity {
         setContentView(R.layout.character_details);
         Bundle intent = getIntent().getExtras();
         characterId = intent.getInt(CHARACTER_ID_KEY);
-        Log.d("TAG", Integer.toString(characterId));
         if(characterId == -1){
             viewModel.loadData(characterId);
-            Log.d("TAG", Integer.toString(characterId));
         }else{
             viewModel.loadData(characterId);
             final EditText characterName = findViewById(R.id.characterName);
@@ -99,16 +101,12 @@ public class characterDetails extends AppCompatActivity {
                     for (int i = 10; i <= viewModel.character.getValue().getConstitution(); ) {
                         if ((i + 10) > ((int)viewModel.character.getValue().getConstitution())) {
                             flatConstitution = i;
-                            Log.d("assigned", "assigning flat constitution");
                             i=i+10;
                         }else{
                             i = i + 10;
                             flatConstitution=i;
                         }
-                        Log.d("I:", Integer.toString(i));
-                        Log.d("Constitution", Double.toString(viewModel.character.getValue().getConstitution()));
                     }
-                    Log.d("flatConstitution", Integer.toString(flatConstitution));
 
                     TextView maxHead = findViewById(R.id.maxHeadHealth);
                     TextView maxTorso = findViewById(R.id.maxTorsoHealth);
@@ -126,8 +124,6 @@ public class characterDetails extends AppCompatActivity {
                         arms = (int)((double)flatConstitution * .15);
                         legs = (int)((double)flatConstitution * .15);
                     }
-                    Log.d("head health double", Double.toString((double)flatConstitution*.1));
-                    Log.d("head health", Integer.toString((int)((double)flatConstitution * .1)));
 
                     maxHead.setText(Integer.toString((int)((double)flatConstitution * .1)));
                     maxTorso.setText(Integer.toString((int)((double)flatConstitution * .3)));
@@ -254,6 +250,35 @@ public class characterDetails extends AppCompatActivity {
     }
 
     public void initViewModel(){
+        final Observer<List<Inventory>> inventoryObserver = new Observer<List<Inventory>>(){
+            @Override
+            public void onChanged(@Nullable List<Inventory> inventory) {
+                Log.d("Inventory size", Integer.toString(starredInventory.size()));
+                if(starredInventory.size() != 0) {
+                    starredInventory.clear();
+                }
+                starredInventory.addAll(inventory);
+                if (starredInventory != null) {
+                    for (int i = 0; i < starredInventory.size(); i++) {
+                        Log.d("Item ", starredInventory.get(i).getName());
+                        insertRow(starredInventory.get(i));
+                    }
+                }
+                Handler h = new Handler();
+                h.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (starredSkills != null) {
+                            for (int i = 0; i < starredSkills.size(); i++) {
+                                insertRow(starredSkills.get(i));
+                            }
+                        }
+                    }
+                },50);
+            }
+        };
+        viewModel.starredInventory.observe(this, inventoryObserver);
+
         final Observer<List<Skill>> skillObserver = new Observer<List<Skill>>() {
             @Override
             public void onChanged(@Nullable List<Skill> skills){
@@ -266,54 +291,62 @@ public class characterDetails extends AppCompatActivity {
                         insertRow(starredInventory.get(i));
                     }
                 }
-                if(starredSkills != null){
-                    for(int i=0; i<starredSkills.size(); i++){
-                        insertRow(starredSkills.get(i));
+                Handler h = new Handler();
+                h.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (starredSkills != null) {
+                            for (int i = 0; i < starredSkills.size(); i++) {
+                                insertRow(starredSkills.get(i));
+                            }
+                        }
                     }
-                }
-            }
-        };
-        final Observer<List<Inventory>> inventoryObserver = new Observer<List<Inventory>>(){
-            @Override
-            public void onChanged(@Nullable List<Inventory> inventory) {
-                if(starredInventory.size() != 0) {
-                    starredInventory.clear();
-                }
-                starredInventory.addAll(inventory);
-                if (starredInventory != null) {
-                    for (int i = 0; i < starredInventory.size(); i++) {
-                        insertRow(starredInventory.get(i));
-                    }
-                }
-                if (starredSkills != null) {
-                    for (int i = 0; i < starredSkills.size(); i++) {
-                        insertRow(starredSkills.get(i));
-                    }
-                }
+                },50);
             }
         };
         viewModel.starredSkills.observe(this, skillObserver);
-        viewModel.starredInventory.observe(this, inventoryObserver);
     }
 
     public void insertRow(final Inventory inventory){
-        LinearLayout contain = findViewById(R.id.rowContainer);
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View newRow = inflater.inflate(R.layout.favorite_cards, null);
-        TextView nameHeading = newRow.findViewById(R.id.nameHeading);
-        nameHeading.setText("Item Name");
-        TextView name = newRow.findViewById(R.id.name);
-        name.setText(inventory.getName());
-        TextView skill = newRow.findViewById(R.id.dice);
-        skill.setText(Integer.toString(viewModel.getDice(inventory.getSkillName(), characterId)));
-        final TextView train = newRow.findViewById(R.id.train);
-        train.setOnClickListener(new View.OnClickListener() {
+        final MutableLiveData<Skill> itemSkill = new MutableLiveData<>();
+        Log.d("Getting skill", "");
+        executor.execute(new Runnable() {
+                 @Override
+                 public void run() {
+                     itemSkill.postValue(viewModel.repository.getSkill(inventory.getSkillName(), inventory.getCharacter()));
+                 }
+             });
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
             @Override
-            public void onClick(View view) {
-                viewModel.train(inventory.getSkillName(), characterId);
+            public void run() {
+                LinearLayout contain = findViewById(R.id.rowContainer);
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                View newRow = inflater.inflate(R.layout.favorite_cards, null);
+                TextView nameHeading = newRow.findViewById(R.id.nameHeading);
+                nameHeading.setText("Item Name");
+                TextView name = newRow.findViewById(R.id.name);
+                name.setText(inventory.getName());
+                TextView skill = newRow.findViewById(R.id.dice);
+                skill.setText(Integer.toString(viewModel.getDice(itemSkill.getValue())));
+                final FloatingActionButton train = newRow.findViewById(R.id.train);
+                train.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        viewModel.train(inventory.getSkillName(), characterId);
+                    }
+                });
+                newRow.setId(inventory.getId());
+                View exists = contain.findViewById(inventory.getId());
+                if(exists==null){
+                    contain.addView(newRow);
+                }else{
+                    ((ViewGroup) exists.getParent()).removeView(exists);
+                    contain.addView(newRow);
+                }
             }
-        });
+        }, 50);
     }
 
     public void insertRow(final Skill addSkill){
@@ -331,7 +364,6 @@ public class characterDetails extends AppCompatActivity {
         train.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 viewModel.train(addSkill);
             }
         });

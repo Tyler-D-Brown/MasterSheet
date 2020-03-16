@@ -19,25 +19,21 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.app.InventoryClasses.Armor;
 import com.example.app.InventoryClasses.Item;
 import com.example.app.InventoryClasses.Weapon;
-import com.example.app.ViewModel.ItemDetailsViewModel;
-import com.example.app.ViewModel.SkillDetailViewModel;
-import com.example.app.db.dbClasses.Skill;
+import com.example.app.ViewModel.InventoryDetailsViewModel;
+import com.example.app.db.dbClasses.Inventory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.app.Utilities.Constants.CHARACTER_ID_KEY;
 import static com.example.app.Utilities.Constants.INVENTORY_ID_KEY;
-import static com.example.app.Utilities.Constants.SKILL_ID_KEY;
 
 public class inventoryDetails extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     private final Context context = this;
     private int characterId = 0;
     private int itemId = 0;
-    private ItemDetailsViewModel viewModel;
+    private InventoryDetailsViewModel viewModel;
     private String type = "";
     private String location = "";
     private Item item = new Item();
@@ -47,18 +43,19 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = ViewModelProviders.of(this).get(InventoryDetailsViewModel.class);
         setContentView(R.layout.inventory_details);
         Bundle intent = getIntent().getExtras();
         characterId = intent.getInt(CHARACTER_ID_KEY);
         itemId = intent.getInt(INVENTORY_ID_KEY);
+        Log.d("Item ID received: ", Integer.toString(itemId));
         if(itemId!=-1) {
-            type = viewModel.loadItem(itemId);
+            viewModel.loadItem(itemId);
         }
         initViewModel();
     }
 
     public void initViewModel(){
-        viewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
         final Spinner typeSpin = (Spinner) findViewById(R.id.type);
         typeSpin.setOnItemSelectedListener(this);
         final List<String> typeList = new ArrayList<String>();
@@ -69,16 +66,32 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpin.setAdapter(typeAdapter);
         final Spinner locationSpin = (Spinner) findViewById(R.id.location);
-        List<String> locationList = new ArrayList<>();
+        final List<String> locationList = new ArrayList<String>();
         locationList.add("Head");
         locationList.add("Torso");
         locationList.add("leftArm");
         locationList.add("rightArm");
         locationList.add("leftLeg");
         locationList.add("rightLeg");
-        ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locationList);
+        ArrayAdapter<String> locationAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, locationList);
         locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpin.setAdapter(locationAdapter);
+        locationSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View selectedItemView, int position, long id)
+            {
+                Log.d("type", "Location Selected");
+                location=parent.getItemAtPosition(position).toString();
+                //your code here
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+                //return;
+            }
+        });
         FloatingActionButton save = findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,125 +109,129 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                 finish();
             }
         });
-        switch(type){
-            case "Item":
-                item = new Item(viewModel.item.getValue());
-                Handler h = new Handler();
-                h.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        EditText name = (EditText) findViewById(R.id.name);
-                        name.setText(item.getName());
-                        EditText quantity = findViewById(R.id.quantity);
-                        quantity.setText(Double.toString(item.getQty()));
-                        if (typeList.indexOf(viewModel.item.getValue().getType()) != -1) {
-                            typeSpin.setSelection(typeList.indexOf(viewModel.item.getValue().getType()));
-                        }
-                        EditText description = (EditText) findViewById(R.id.description);
-                        description.setText(item.getDescription());
-                        CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
-                        favorited.setVisibility(View.GONE);
-                        EditText rank = (EditText) findViewById(R.id.rank);
-                        rank.setVisibility(View.GONE);
-                        locationSpin.setVisibility(View.GONE);
-                    }
-                }, 50);
-                break;
-            case "Weapon":
-                weapon = new Weapon(viewModel.item.getValue());
-                h = new Handler();
-                h.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        EditText name = (EditText) findViewById(R.id.name);
-                        name.setText(weapon.getName());
-                        EditText quantity = findViewById(R.id.quantity);
-                        quantity.setText(Double.toString(weapon.getQty()));
-                        if (typeList.indexOf(viewModel.item.getValue().getType()) != -1) {
-                            typeSpin.setSelection(typeList.indexOf(viewModel.item.getValue().getType()));
-                        }
-                        EditText description = (EditText) findViewById(R.id.description);
-                        description.setText(weapon.getDescription());
-                        CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
-                        favorited.setSelected(weapon.isStarred());
-                        TextView rankHeading = findViewById(R.id.rankHeading);
-                        rankHeading.setText("Skill Name");
-                        EditText rank = (EditText) findViewById(R.id.rank);
-                        rank.setInputType(InputType.TYPE_CLASS_TEXT);
-                        rank.setText(weapon.getSkillName());
-                        locationSpin.setVisibility(View.GONE);
-                    }
-                }, 50);
-                break;
-            case "Armor":
-                armor = new Armor(viewModel.item.getValue());
-                h = new Handler();
-                h.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        EditText name = (EditText) findViewById(R.id.name);
-                        name.setText(armor.getName());
-                        EditText quantity = findViewById(R.id.quantity);
-                        quantity.setText(Double.toString(armor.getQty()));
-                        if (typeList.indexOf(viewModel.item.getValue().getType()) != -1) {
-                            typeSpin.setSelection(typeList.indexOf(viewModel.item.getValue().getType()));
-                        }
-                        EditText description = (EditText) findViewById(R.id.description);
-                        description.setText(armor.getDescription());
-                        CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
-                        favorited.setVisibility(View.GONE);
-                        TextView rankHeading = findViewById(R.id.rankHeading);
-                        rankHeading.setText("Rank");
-                        EditText rank = (EditText) findViewById(R.id.rank);
-                        rank.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        rank.setText(armor.getRating());
-                    }
-                }, 50);
-                break;
-            default:
-        }
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+              @Override
+              public void run() {
+                  if(itemId!=-1) {
+                      type = viewModel.item.getValue().getType();
+                  }
+                  switch (type) {
+                      case "Item":
+                          EditText name = (EditText) findViewById(R.id.name);
+                          EditText quantity = findViewById(R.id.quantity);
+                          if (typeList.indexOf(type)!=-1){
+                              typeSpin.setSelection(typeList.indexOf(type));
+                          }
+                          EditText description = (EditText) findViewById(R.id.description);
+                          CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
+                          favorited.setVisibility(View.GONE);
+                          EditText rank = (EditText) findViewById(R.id.rank);
+                          rank.setVisibility(View.GONE);
+                          locationSpin.setVisibility(View.GONE);
+                          if(itemId!=-1) {
+                              item = new Item(viewModel.item.getValue());
+                              name.setText(item.getName());
+                              quantity.setText(Double.toString(item.getQty()));
+                              description.setText(item.getDescription());
+                          }
+                          break;
+                      case "Weapon":
+                          EditText name2 = (EditText) findViewById(R.id.name);
+                          EditText quantity2 = findViewById(R.id.quantity);
+                          quantity2.setText(Double.toString(weapon.getQty()));
+                          if (typeList.indexOf(type)!=-1){
+                              typeSpin.setSelection(typeList.indexOf(type));
+                          }
+                          EditText description2 = (EditText) findViewById(R.id.description);
+                          CheckBox favorited2 = (CheckBox) findViewById(R.id.favorite);
+                          TextView rankHeading = findViewById(R.id.rankHeading);
+                          rankHeading.setText("Skill Name");
+                          EditText rank2 = (EditText) findViewById(R.id.rank);
+                          rank2.setInputType(InputType.TYPE_CLASS_TEXT);
+                          locationSpin.setVisibility(View.GONE);
+
+                          if(itemId !=-1) {
+                              weapon = new Weapon(viewModel.item.getValue());
+                              name2.setText(weapon.getName());
+                              description2.setText(weapon.getDescription());
+                              favorited2.setChecked(weapon.isStarred());
+                              rank2.setText(weapon.getSkillName());
+                          }
+                          break;
+                      case "Armor":
+                          EditText name3 = (EditText) findViewById(R.id.name);
+                          EditText quantity3 = findViewById(R.id.quantity);
+                          if (typeList.indexOf(type)!=-1){
+                              typeSpin.setSelection(typeList.indexOf(type));
+                          }
+                          EditText description3 = (EditText) findViewById(R.id.description);
+                          CheckBox favorited3 = (CheckBox) findViewById(R.id.favorite);
+                          favorited3.setVisibility(View.GONE);
+                          TextView rankHeading3 = findViewById(R.id.rankHeading);
+                          EditText rank3 = (EditText) findViewById(R.id.rank);
+                          rank3.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+                          if(itemId!=-1) {
+                              armor = new Armor(viewModel.item.getValue());
+                              name3.setText(armor.getName());
+                              quantity3.setText(Double.toString(armor.getQty()));
+                              description3.setText(armor.getDescription());
+                              rankHeading3.setText("Rank");
+                              rank3.setText(Integer.toString(armor.getRating()));
+                              if (locationList.indexOf(armor.getArmorLocation())!=-1){
+                                  Log.d("Setting location", armor.getArmorLocation());
+                                  locationSpin.setSelection(locationList.indexOf(armor.getArmorLocation()));
+                              }
+                          }
+                          break;
+                      default:
+                  }
+              }
+        }, 200);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-        switch (parent.getId()) {
-            case R.id.type:
-                type = parent.getItemAtPosition(position).toString();
-                EditText rank = findViewById(R.id.rank);
-                Spinner armorLocation = findViewById(R.id.location);
-                CheckBox favorite = findViewById(R.id.favorite);
-                TextView rankHeading = findViewById(R.id.rankHeading);
-                TextView locationHeading = findViewById(R.id.locationHeading);
-                TextView favoriteHeading = findViewById(R.id.favoriteHeading);
-                switch(parent.getItemAtPosition(position).toString()){
-                    case "Item":
-                        rank.setVisibility(View.GONE);
-                        armorLocation.setVisibility(View.GONE);
-                        favorite.setVisibility(View.GONE);
-                        rankHeading.setVisibility(View.GONE);
-                        locationHeading.setVisibility(View.GONE);
-                        favoriteHeading.setVisibility(View.GONE);
-                        break;
-                    case "Weapon":
-                        armorLocation.setVisibility(View.GONE);
-                        rank.setVisibility(View.VISIBLE);
-                        locationHeading.setVisibility(View.GONE);
-                        rankHeading.setVisibility(View.VISIBLE);
-                        favoriteHeading.setVisibility(View.VISIBLE);
-                        favorite.setVisibility(View.VISIBLE);
-                        break;
-                    case "Armor":
-                        favorite.setVisibility(View.GONE);
-                        rank.setVisibility(View.VISIBLE);
-                        armorLocation.setVisibility(View.VISIBLE);
-                        favoriteHeading.setVisibility(View.GONE);
-                        rankHeading.setVisibility(View.VISIBLE);
-                        locationHeading.setVisibility(View.VISIBLE);
-                        break;
-                }
+        Log.d("type", "Selected type");
+        type = parent.getItemAtPosition(position).toString();
+        EditText rank = findViewById(R.id.rank);
+        Spinner armorLocation = findViewById(R.id.location);
+        CheckBox favorite = findViewById(R.id.favorite);
+        TextView rankHeading = findViewById(R.id.rankHeading);
+        TextView locationHeading = findViewById(R.id.locationHeading);
+        TextView favoriteHeading = findViewById(R.id.favoriteHeading);
+        switch(parent.getItemAtPosition(position).toString()){
+            case "Item":
+                rank.setVisibility(View.GONE);
+                armorLocation.setVisibility(View.GONE);
+                favorite.setVisibility(View.GONE);
+                rankHeading.setVisibility(View.GONE);
+                locationHeading.setVisibility(View.GONE);
+                favoriteHeading.setVisibility(View.GONE);
+                type="Item";
                 break;
-            case R.id.location:
-                location=parent.getItemAtPosition(position).toString();
+            case "Weapon":
+                armorLocation.setVisibility(View.GONE);
+                rank.setVisibility(View.VISIBLE);
+                locationHeading.setVisibility(View.GONE);
+                rankHeading.setVisibility(View.VISIBLE);
+                favoriteHeading.setVisibility(View.VISIBLE);
+                favorite.setVisibility(View.VISIBLE);
+                rankHeading.setText("Skill Name");
+                rank.setInputType(InputType.TYPE_CLASS_TEXT);
+                type="Weapon";
+                break;
+            case "Armor":
+                favorite.setVisibility(View.GONE);
+                rank.setVisibility(View.VISIBLE);
+                armorLocation.setVisibility(View.VISIBLE);
+                favoriteHeading.setVisibility(View.GONE);
+                rankHeading.setVisibility(View.VISIBLE);
+                locationHeading.setVisibility(View.VISIBLE);
+                rankHeading.setText("Damage Reduction");
+                rank.setInputType(InputType.TYPE_CLASS_NUMBER);
+                type="Armor";
                 break;
         }
     }
@@ -225,7 +242,45 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
     }
 
     public boolean saveItem(){
-        viewModel.saveItem(new Item());
+        Log.d("Saving as a ", type);
+        EditText name = findViewById(R.id.name);
+        EditText quantity = findViewById(R.id.quantity);
+        EditText description = findViewById(R.id.description);
+        if(type == "Weapon"){
+            Log.d("Saving as ", "For Sure a weapon");
+            EditText skill = findViewById(R.id.rank);
+            CheckBox fav = findViewById(R.id.favorite);
+            Weapon stabAndSmasher = new Weapon(itemId,
+                    name.getText().toString(),
+                    description.getText().toString(),
+                    Double.parseDouble(quantity.getText().toString()),
+                    characterId,
+                    skill.getText().toString(),
+                    fav.isChecked());
+            if(stabAndSmasher instanceof Weapon){
+                Log.d("Yep for sure a ", "Weapon ");
+            }
+            viewModel.saveItem((Weapon)stabAndSmasher);
+        }else if(type == "Armor"){
+            EditText reduction = findViewById(R.id.rank);
+            Armor armor = new Armor(itemId,
+                    name.getText().toString(),
+                    description.getText().toString(),
+                    Double.parseDouble(quantity.getText().toString()),
+                    characterId,
+                    Integer.parseInt(reduction.getText().toString()),
+                    location
+            );
+            viewModel.saveItem(new Inventory(armor));
+        }else{
+            Item item = new Item(itemId,
+                    name.getText().toString(),
+                    description.getText().toString(),
+                    Double.parseDouble(quantity.getText().toString()),
+                    characterId
+            );
+            viewModel.saveItem(new Inventory(item));
+        }
         return true;
     }
 }

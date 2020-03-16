@@ -1,5 +1,7 @@
 package com.example.app.db.dbClasses;
 
+import android.util.Log;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -28,7 +30,9 @@ public class Inventory {
     private String armorLocation;
 
     public Inventory(int id, String name, String description, double qty, String type, int rating, String skillName, int character, boolean starred, String armorLocation){
-        this.id=id;
+        if(id != -1) {
+            this.id = id;
+        }
         this.name=name;
         this.description=description;
         this.qty=qty;
@@ -45,43 +49,45 @@ public class Inventory {
 
     @Ignore
     public Inventory(Armor item){
-        this.id=item.getId();
+        Log.d("Inventory is a ", "Armor");
+        if(id != -1) {
+            this.id = item.getId();
+        }
         this.name=item.getName();
         this.description=item.getDescription();
         this.qty=item.getQty();
         this.type="Armor";
         this.rating=item.getRating();
-        this.skillName="";
         this.character=item.getCharacter();
-        this.starred=false;
         this.armorLocation=item.getArmorLocation();
     }
 
     @Ignore
     public Inventory(Item item){
-        this.id=item.getId();
+        Log.d("Inventory is a ", "Item");
+        if(id != -1) {
+            this.id = item.getId();
+        }
         this.name=item.getName();
         this.description=item.getDescription();
         this.qty=item.getQty();
-        this.type="item";
-        this.rating=0;
-        this.skillName="";
+        this.type="Item";
         this.character=item.getCharacter();
-        this.starred=false;
-        this.armorLocation="";
     }
 
-    @Ignore Inventory(Weapon item){
-        this.id=item.getId();
-        this.name=item.getName();
-        this.description=item.getDescription();
-        this.qty=item.getQty();
+    @Ignore
+    public Inventory(Weapon weapon){
+        Log.d("Inventory is a ", "Weapon");
+        if(id != -1) {
+            this.id = weapon.getId();
+        }
+        this.name=weapon.getName();
+        this.description=weapon.getDescription();
+        this.qty=weapon.getQty();
         this.type="Weapon";
-        this.rating=0;
-        this.skillName=item.getSkillName();
-        this.character=item.getCharacter();
-        this.starred=item.isStarred();
-        this.armorLocation="";
+        this.skillName=weapon.getSkillName();
+        this.character=weapon.getCharacter();
+        this.starred=weapon.isStarred();
     }
 
     public int getId() {

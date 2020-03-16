@@ -2,7 +2,7 @@ package com.example.app.InventoryClasses;
 
 import com.example.app.db.dbClasses.Inventory;
 
-public class Weapon extends Item {
+public class Weapon extends Item{
     private String skillName;
     private boolean starred;
 

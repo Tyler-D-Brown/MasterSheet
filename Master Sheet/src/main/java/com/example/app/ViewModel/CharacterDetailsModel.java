@@ -2,6 +2,7 @@ package com.example.app.ViewModel;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CharacterDetailsModel extends AndroidViewModel {
-    private AppRepository repository;
+    public AppRepository repository;
     public MutableLiveData<Characters> character = new MutableLiveData<Characters>();
     public LiveData<List<Inventory>> starredInventory;
     public LiveData<List<Skill>> starredSkills;
@@ -37,8 +38,6 @@ public class CharacterDetailsModel extends AndroidViewModel {
             @Override
             public void run() {
                 if(repository.getCharacterById(characterId) != null) {
-                    Characters charac = repository.getCharacterById(characterId);
-                    Log.d("TAG", charac.getName());
                     character.postValue(repository.getCharacterById(characterId));
 
                 }
@@ -85,51 +84,65 @@ public class CharacterDetailsModel extends AndroidViewModel {
                 att = character.getValue().getStrength();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Agility":
                 att = character.getValue().getAgility();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Dexterity":
                 att = character.getValue().getDexterity();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Constitution":
                 att = character.getValue().getConstitution();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Intelligence":
                 att = character.getValue().getIntelligence();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Will":
                 att = character.getValue().getWill();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
             case "Charisma":
                 att = character.getValue().getCharisma();
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
+                }else{
+                    attributeDice = (int)(att/10);
                 }
                 break;
         }
         double rank = skill.getValue().getRank();
         if(rank/10 < (int)(rank/10)) {
-            return attributeDice + ((int)(rank/10)-1);
+            return attributeDice + ((int)rank-1);
         }
         else{
-            return attributeDice + ((int)(rank/10));
+            return attributeDice + ((int)rank);
         }
     }
 
@@ -137,11 +150,9 @@ public class CharacterDetailsModel extends AndroidViewModel {
         String attribute = skill.getAttribute();
         int attributeDice = 0;
         double att;
-        Log.d("Attribute:", attribute);
         switch (attribute) {
             case "Strength":
                 att = character.getValue().getStrength();
-                Log.d("Strength:", Double.toString(att));
                 if(att/10< (int)(att/10)) {
                     attributeDice = (int)(att/10) - 1;
                 }else{

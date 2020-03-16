@@ -106,4 +106,17 @@ public class AppRepository {
     public Inventory getItemById(int itemId) {
         return db.inventory().getInventoryById(itemId);
     }
+
+    public void saveInventory(Inventory newItem) {
+        db.inventory().insertInventory(newItem);
+    }
+
+    public void deleteInventory(final Inventory value) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.inventory().deleteItem(value);
+            }
+        });
+    }
 }
