@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -72,7 +73,7 @@ public class skillDetails extends AppCompatActivity implements AdapterView.OnIte
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.deleteSkill();
+                viewModel.deleteSkill(skillId);
                 finish();
             }
         });
@@ -89,7 +90,6 @@ public class skillDetails extends AppCompatActivity implements AdapterView.OnIte
                     EditText rank = (EditText) findViewById(R.id.rank);
                     EditText description = (EditText) findViewById(R.id.description);
                     CheckBox favorited = (CheckBox) findViewById(R.id.favorite);
-                    Log.e("CheckBox", Boolean.toString(favorited.isChecked()));
                     name.setText(viewModel.skill.getValue().getName());
                     rank.setText(Double.toString(viewModel.skill.getValue().getRank()));
                     description.setText(viewModel.skill.getValue().getDescription());
@@ -121,14 +121,23 @@ public class skillDetails extends AppCompatActivity implements AdapterView.OnIte
         EditText rank = (EditText) findViewById(R.id.rank);
         EditText description = (EditText) findViewById(R.id.description);
 
-        Log.d("Governing Attribute", attribute);
-
-        Skill newSkill = new Skill(characterId, name.getText().toString(),
-                Double.parseDouble(rank.getText().toString()), description.getText().toString(),
-                attribute.toString(), favorite);
-
-        Log.d("Skill Name", newSkill.getName());
-        viewModel.saveSkill(newSkill);
+        Skill newSkill = null;
+        try{
+            newSkill = new Skill(characterId, name.getText().toString(),
+                    Double.parseDouble(rank.getText().toString()), description.getText().toString(),
+                    attribute.toString(), favorite);
+        }catch (Exception e){
+            Log.e("Invalid input", "saveSkill: ", e);
+            Toast.makeText(context, "Please make sure every field is filled.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        try {
+            viewModel.saveSkill(newSkill);
+        }catch (Exception e){
+            Log.e("Invalid input", "saveSkill: ", e);
+            Toast.makeText(context, "Please make sure all fields are filled out.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 }

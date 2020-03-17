@@ -268,10 +268,11 @@
         android:textSize="10sp"/>
 
     <TextView
-        android:text="Health"
-        android:layout_column="2"
+        android:id="@+id/healthHeading"
         android:layout_row="0"
-        android:textSize="10sp"/>
+        android:layout_column="2"
+        android:text="Health"
+        android:textSize="10sp" />
 
     <TextView
         android:text="Armor"

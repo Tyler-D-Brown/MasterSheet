@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +51,20 @@ public class characterDetails extends AppCompatActivity {
         characterId = intent.getInt(CHARACTER_ID_KEY);
         if(characterId == -1){
             viewModel.loadData(characterId);
+            final EditText headHealth = findViewById(R.id.headHealth);
+            final EditText torsoHealth = findViewById(R.id.torsoHealth);
+            final EditText leftArmHealth = findViewById(R.id.leftArmHealth);
+            final EditText rightArmHealth = findViewById(R.id.rightArmHealth);
+            final EditText leftLegHealth = findViewById(R.id.leftLegHealth);
+            final EditText rightLegHealth = findViewById(R.id.rightLegHealth);
+            final TextView healthHeading = findViewById(R.id.healthHeading);
+            healthHeading.setVisibility(View.GONE);
+            headHealth.setVisibility(View.GONE);
+            torsoHealth.setVisibility(View.GONE);
+            leftArmHealth.setVisibility(View.GONE);
+            rightArmHealth.setVisibility(View.GONE);
+            leftLegHealth.setVisibility(View.GONE);
+            rightLegHealth.setVisibility(View.GONE);
         }else{
             viewModel.loadData(characterId);
             final EditText characterName = findViewById(R.id.characterName);
@@ -153,13 +168,17 @@ public class characterDetails extends AppCompatActivity {
         addSkill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, SkillList.class);
-                intent.putExtra(CHARACTER_ID_KEY, characterId);
-                try{
-                    context.startActivity(intent);
-                }
-                catch(Exception e){
-                    Log.d("Except", e.toString());
+                if(characterId!=-1) {
+                    saveCharacter();
+                    Intent intent = new Intent(context, SkillList.class);
+                    intent.putExtra(CHARACTER_ID_KEY, characterId);
+                    try {
+                        context.startActivity(intent);
+                    } catch (Exception e) {
+                        Log.d("Except", e.toString());
+                    }
+                }else{
+                    Toast.makeText(context, "Please save the Character before adding a any Skills.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -167,13 +186,17 @@ public class characterDetails extends AppCompatActivity {
         addInventory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, inventoryList.class);
-                intent.putExtra(CHARACTER_ID_KEY, characterId);
-                try{
-                    context.startActivity(intent);
-                }
-                catch(Exception e){
-                    Log.d("Except", e.toString());
+                if(characterId!=-1) {
+                    saveCharacter();
+                    Intent intent = new Intent(context, inventoryList.class);
+                    intent.putExtra(CHARACTER_ID_KEY, characterId);
+                    try {
+                        context.startActivity(intent);
+                    } catch (Exception e) {
+                        Log.d("Except", e.toString());
+                    }
+                }else{
+                    Toast.makeText(context, "Please save the Character before adding a any Items.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -190,62 +213,86 @@ public class characterDetails extends AppCompatActivity {
     }
 
     public boolean saveCharacter(){
-        EditText name = findViewById(R.id.characterName);
-        EditText race = findViewById(R.id.race);
-        EditText build = findViewById(R.id.build);
+        Characters character = null;
+        try {
+            EditText name = findViewById(R.id.characterName);
+            EditText race = findViewById(R.id.race);
+            EditText build = findViewById(R.id.build);
 
-        EditText strength = findViewById(R.id.strength);
-        EditText agility = findViewById(R.id.agility);
-        EditText dexterity = findViewById(R.id.dexterity);
-        EditText constitution = findViewById(R.id.constitution);
-        EditText intelligence = findViewById(R.id.intelligence);
-        EditText will = findViewById(R.id.will);
-        EditText charisma = findViewById(R.id.charisma);
+            EditText strength = findViewById(R.id.strength);
+            EditText agility = findViewById(R.id.agility);
+            EditText dexterity = findViewById(R.id.dexterity);
+            EditText constitution = findViewById(R.id.constitution);
+            EditText intelligence = findViewById(R.id.intelligence);
+            EditText will = findViewById(R.id.will);
+            EditText charisma = findViewById(R.id.charisma);
 
-        EditText gold = findViewById(R.id.gold);
+            EditText gold = findViewById(R.id.gold);
 
-        EditText headHealth = findViewById(R.id.headHealth);
-        EditText torsoHealth = findViewById(R.id.torsoHealth);
-        EditText leftArmHealth = findViewById(R.id.leftArmHealth);
-        EditText rightArmHealth = findViewById(R.id.rightArmHealth);
-        EditText leftLegHealth = findViewById(R.id.leftLegHealth);
-        EditText rightLegHealth = findViewById(R.id.rightLegHealth);
+            EditText headHealth = findViewById(R.id.headHealth);
+            EditText torsoHealth = findViewById(R.id.torsoHealth);
+            EditText leftArmHealth = findViewById(R.id.leftArmHealth);
+            EditText rightArmHealth = findViewById(R.id.rightArmHealth);
+            EditText leftLegHealth = findViewById(R.id.leftLegHealth);
+            EditText rightLegHealth = findViewById(R.id.rightLegHealth);
 
-        EditText headArmor = findViewById(R.id.headArmor);
-        EditText torsoArmor = findViewById(R.id.torsoArmor);
-        EditText leftArmArmor = findViewById(R.id.leftArmArmor);
-        EditText rightArmArmor = findViewById(R.id.rightArmArmor);
-        EditText leftLegArmor = findViewById(R.id.leftLegArmor);
-        EditText rightLegArmor = findViewById(R.id.rightLegArmor);
+            EditText headArmor = findViewById(R.id.headArmor);
+            EditText torsoArmor = findViewById(R.id.torsoArmor);
+            EditText leftArmArmor = findViewById(R.id.leftArmArmor);
+            EditText rightArmArmor = findViewById(R.id.rightArmArmor);
+            EditText leftLegArmor = findViewById(R.id.leftLegArmor);
+            EditText rightLegArmor = findViewById(R.id.rightLegArmor);
 
-        double str = Double.parseDouble(strength.getText().toString());
-        double agi = Double.parseDouble(agility.getText().toString());
-        double dex = Double.parseDouble(dexterity.getText().toString());
-        double con = Double.parseDouble(constitution.getText().toString());
-        double intel = Double.parseDouble(intelligence.getText().toString());
+            double str = Double.parseDouble(strength.getText().toString());
+            double agi = Double.parseDouble(agility.getText().toString());
+            double dex = Double.parseDouble(dexterity.getText().toString());
+            double con = Double.parseDouble(constitution.getText().toString());
+            double intel = Double.parseDouble(intelligence.getText().toString());
 
-        int hdam = Integer.parseInt(headHealth.getText().toString());
-        int tdam = Integer.parseInt(torsoHealth.getText().toString());
-        int ladam = Integer.parseInt(leftArmHealth.getText().toString());
-        int radam = Integer.parseInt(rightArmHealth.getText().toString());
-        int lldam = Integer.parseInt(leftLegHealth.getText().toString());
-        int rldam = Integer.parseInt(rightLegHealth.getText().toString());
+            int hdam = 0;
+            int tdam = 0;
+            int ladam = 0;
+            int radam = 0;
+            int lldam = 0;
+            int rldam = 0;
 
-        int har = Integer.parseInt(headArmor.getText().toString());
-        int tar = Integer.parseInt(torsoArmor.getText().toString());
-        int lar = Integer.parseInt(leftArmArmor.getText().toString());
-        int rar = Integer.parseInt(rightArmArmor.getText().toString());
-        int rlar = Integer.parseInt(leftLegArmor.getText().toString());
-        int llar = Integer.parseInt(rightLegArmor.getText().toString());
+            if (characterId != -1) {
+                hdam = Integer.parseInt(headHealth.getText().toString());
+                tdam = Integer.parseInt(torsoHealth.getText().toString());
+                ladam = Integer.parseInt(leftArmHealth.getText().toString());
+                radam = Integer.parseInt(rightArmHealth.getText().toString());
+                lldam = Integer.parseInt(leftLegHealth.getText().toString());
+                rldam = Integer.parseInt(rightLegHealth.getText().toString());
+            }
 
-        Characters character = new Characters(
-                characterId, name.getText().toString(), race.getText().toString(),
-                build.getText().toString(), str, dex, agi, intel,
-                Double.parseDouble(will.getText().toString()), con,
-                Double.parseDouble(charisma.getText().toString()), hdam, tdam, ladam,
-                radam, rldam, lldam, har, tar, rar, lar, rlar, llar,
-                Double.parseDouble(gold.getText().toString()));
-        viewModel.saveCharacter(character);
+            int har = Integer.parseInt(headArmor.getText().toString());
+            int tar = Integer.parseInt(torsoArmor.getText().toString());
+            int lar = Integer.parseInt(leftArmArmor.getText().toString());
+            int rar = Integer.parseInt(rightArmArmor.getText().toString());
+            int rlar = Integer.parseInt(leftLegArmor.getText().toString());
+            int llar = Integer.parseInt(rightLegArmor.getText().toString());
+            character = new Characters(
+                    characterId, name.getText().toString(), race.getText().toString(),
+                    build.getText().toString(), str, dex, agi, intel,
+                    Double.parseDouble(will.getText().toString()), con,
+                    Double.parseDouble(charisma.getText().toString()), hdam, tdam, ladam,
+                    radam, rldam, lldam, har, tar, rar, lar, rlar, llar,
+                    Double.parseDouble(gold.getText().toString()));
+        }
+        catch (Exception e){
+            Log.e("Invalid input", "saveCharacter: ", e);
+            Toast.makeText(context, "Please make sure every field is filled.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        try {
+            viewModel.saveCharacter(character);
+        }
+        catch (Exception e){
+            Log.e("Database Error", "Error saving to database", e);
+            Toast.makeText(context, "Error saving to the database, please try again. ", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -253,14 +300,12 @@ public class characterDetails extends AppCompatActivity {
         final Observer<List<Inventory>> inventoryObserver = new Observer<List<Inventory>>(){
             @Override
             public void onChanged(@Nullable List<Inventory> inventory) {
-                Log.d("Inventory size", Integer.toString(starredInventory.size()));
                 if(starredInventory.size() != 0) {
                     starredInventory.clear();
                 }
                 starredInventory.addAll(inventory);
                 if (starredInventory != null) {
                     for (int i = 0; i < starredInventory.size(); i++) {
-                        Log.d("Item ", starredInventory.get(i).getName());
                         insertRow(starredInventory.get(i));
                     }
                 }
@@ -309,7 +354,6 @@ public class characterDetails extends AppCompatActivity {
 
     public void insertRow(final Inventory inventory){
         final MutableLiveData<Skill> itemSkill = new MutableLiveData<>();
-        Log.d("Getting skill", "");
         executor.execute(new Runnable() {
                  @Override
                  public void run() {

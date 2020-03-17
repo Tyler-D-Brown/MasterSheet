@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -42,6 +43,8 @@ public class inventoryList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SearchView search = findViewById(R.id.search);
+        search.setVisibility(View.GONE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchable_list);
         initViewModel();
@@ -76,7 +79,6 @@ public class inventoryList extends AppCompatActivity {
     }
 
     private void initViewModel() {
-        Log.d("TAG", "initViewModel: ");
         viewModel = ViewModelProviders.of(this).get(InventoryListViewModel.class);
         final Observer<List<Inventory>> characterObserver = new Observer<List<Inventory>>() {
             @Override
@@ -85,7 +87,6 @@ public class inventoryList extends AppCompatActivity {
                     inventoryList.clear();
                 }
                 if(inventory.size() != 0) {
-                    Log.d("TAG", Integer.toString(inventory.size()));
                     inventoryList.addAll(inventory);
                 }
                 if(inventoryList != null){
@@ -118,7 +119,6 @@ public class inventoryList extends AppCompatActivity {
                 final View newSkillRow = inflater.inflate(R.layout.searchable_list_card, null);
                 Button button = newSkillRow.findViewById(R.id.name);
                 button.setText(add.getName());
-                Log.d(add.getName(), add.getType());
                 if(add.getType().equals("Weapon")){
                     TextView dice = newSkillRow.findViewById(R.id.dice);
                     int die = viewModel.getDice(itemSkill.getValue());

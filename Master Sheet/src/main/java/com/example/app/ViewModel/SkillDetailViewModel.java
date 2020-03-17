@@ -35,7 +35,9 @@ public class SkillDetailViewModel extends AndroidViewModel {
         });
     }
 
-    public void deleteSkill() {
-        repository.deleteSkill(skill.getValue());
+    public void deleteSkill(String id) {
+        if(!id.equals("")) {
+            repository.deleteSkill(skill.getValue());
+        }
     }
 }

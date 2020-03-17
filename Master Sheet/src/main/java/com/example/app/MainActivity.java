@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
                     charactersList.clear();
                 }
                 if(characters.size() != 0) {
-                    Log.d("TAG", Integer.toString(characters.size()));
                     charactersList.addAll(characters);
                 }
                 if(charactersList != null){

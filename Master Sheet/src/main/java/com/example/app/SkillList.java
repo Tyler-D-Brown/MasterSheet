@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -41,6 +42,8 @@ public class SkillList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SearchView search = findViewById(R.id.search);
+        search.setVisibility(View.GONE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchable_list);
         initViewModel();
@@ -75,7 +78,6 @@ public class SkillList extends AppCompatActivity {
     }
 
     private void initViewModel() {
-        Log.d("TAG", "initViewModel: ");
         viewModel = ViewModelProviders.of(this).get(SkillListViewModel.class);
         final Observer<List<Skill>> characterObserver = new Observer<List<Skill>>() {
             @Override
@@ -84,7 +86,6 @@ public class SkillList extends AppCompatActivity {
                     skillList.clear();
                 }
                 if(skills.size() != 0) {
-                    Log.d("TAG", Integer.toString(skills.size()));
                     skillList.addAll(skills);
                 }
                 if(skillList != null){
@@ -110,7 +111,6 @@ public class SkillList extends AppCompatActivity {
                 button.setText(add.getName());
                 TextView dice = newSkillRow.findViewById(R.id.dice);
                 int die = viewModel.getDice(add);
-                Log.d("total Dice to roll: ", Integer.toString(die));
                 dice.setText(Integer.toString(die));
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override

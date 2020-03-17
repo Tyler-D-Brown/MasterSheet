@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -105,7 +106,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.deleteSkill();
+                viewModel.deleteSkill(itemId);
                 finish();
             }
         });
@@ -180,7 +181,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                               rankHeading3.setText("Rank");
                               rank3.setText(Integer.toString(armor.getRating()));
                               if (locationList.indexOf(armor.getArmorLocation())!=-1){
-                                  Log.d("Setting location", armor.getArmorLocation());
+
                                   locationSpin.setSelection(locationList.indexOf(armor.getArmorLocation()));
                               }
                           }
@@ -193,7 +194,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-        Log.d("type", "Selected type");
+
         type = parent.getItemAtPosition(position).toString();
         EditText rank = findViewById(R.id.rank);
         Spinner armorLocation = findViewById(R.id.location);
@@ -242,44 +243,79 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
     }
 
     public boolean saveItem(){
-        Log.d("Saving as a ", type);
         EditText name = findViewById(R.id.name);
         EditText quantity = findViewById(R.id.quantity);
         EditText description = findViewById(R.id.description);
         if(type == "Weapon"){
-            Log.d("Saving as ", "For Sure a weapon");
             EditText skill = findViewById(R.id.rank);
             CheckBox fav = findViewById(R.id.favorite);
-            Weapon stabAndSmasher = new Weapon(itemId,
-                    name.getText().toString(),
-                    description.getText().toString(),
-                    Double.parseDouble(quantity.getText().toString()),
-                    characterId,
-                    skill.getText().toString(),
-                    fav.isChecked());
-            if(stabAndSmasher instanceof Weapon){
-                Log.d("Yep for sure a ", "Weapon ");
+            Weapon stabAndSmasher = null;
+            try {
+                stabAndSmasher = new Weapon(itemId,
+                        name.getText().toString(),
+                        description.getText().toString(),
+                        Double.parseDouble(quantity.getText().toString()),
+                        characterId,
+                        skill.getText().toString(),
+                        fav.isChecked());
+            }catch (Exception e){
+                Log.e("Invalid input", "saveItem: ", e);
+                Toast.makeText(context, "Please make sure all fields are filled out.", Toast.LENGTH_SHORT).show();
+                return false;
             }
-            viewModel.saveItem((Weapon)stabAndSmasher);
+            try {
+
+                viewModel.saveItem((Weapon) stabAndSmasher);
+            }catch (Exception e){
+                //Log.e("Database Error", "saveItem: ", e);
+                Toast.makeText(context, "Error saving the Weapon to the database, Please make sure you have the skill to use it.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }else if(type == "Armor"){
             EditText reduction = findViewById(R.id.rank);
-            Armor armor = new Armor(itemId,
-                    name.getText().toString(),
-                    description.getText().toString(),
-                    Double.parseDouble(quantity.getText().toString()),
-                    characterId,
-                    Integer.parseInt(reduction.getText().toString()),
-                    location
-            );
-            viewModel.saveItem(new Inventory(armor));
+            Armor armor = null;
+                try {
+                    armor = new Armor(itemId,
+                            name.getText().toString(),
+                            description.getText().toString(),
+                            Double.parseDouble(quantity.getText().toString()),
+                            characterId,
+                            Integer.parseInt(reduction.getText().toString()),
+                            location
+                    );
+                }catch (Exception e){
+                    Log.e("Invalid input", "saveItem: ", e);
+                    Toast.makeText(context, "Please make sure all fields are filled out.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                try {
+                    viewModel.saveItem(new Inventory(armor));
+                }catch (Exception e){
+                    Log.e("Database Error", "Error saving to database", e);
+                    Toast.makeText(context, "Error saving to the database, please try again. ", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
         }else{
-            Item item = new Item(itemId,
-                    name.getText().toString(),
-                    description.getText().toString(),
-                    Double.parseDouble(quantity.getText().toString()),
-                    characterId
-            );
-            viewModel.saveItem(new Inventory(item));
+            Item item = null;
+                try {
+                    item = new Item(itemId,
+                            name.getText().toString(),
+                            description.getText().toString(),
+                            Double.parseDouble(quantity.getText().toString()),
+                            characterId
+                    );
+                }catch (Exception e){
+                    Log.e("Invalid input", "saveItem: ", e);
+                    Toast.makeText(context, "Please make sure all fields are filled out.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                try {
+                    viewModel.saveItem(new Inventory(item));
+                }catch (Exception e){
+                    Log.e("Database Error", "Error saving to database", e);
+                    Toast.makeText(context, "Error saving to the database, please try again. ", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
         }
         return true;
     }
