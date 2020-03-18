@@ -119,4 +119,8 @@ public class AppRepository {
             }
         });
     }
+
+    public LiveData<List<String>> getSkillNames(int character){
+        return db.skills().getCharacterSkillNames(character);
+    }
 }

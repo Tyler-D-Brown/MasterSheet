@@ -3,6 +3,7 @@ package com.example.app;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.app.InventoryClasses.Armor;
@@ -22,6 +25,7 @@ import com.example.app.InventoryClasses.Item;
 import com.example.app.InventoryClasses.Weapon;
 import com.example.app.ViewModel.InventoryDetailsViewModel;
 import com.example.app.db.dbClasses.Inventory;
+import com.example.app.db.dbClasses.Skill;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -40,6 +44,8 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
     private Item item = new Item();
     private Armor armor = new Armor();
     private Weapon weapon = new Weapon();
+    private Weapon stabAndSmasher;
+    private Skill gotSkill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +55,8 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
         Bundle intent = getIntent().getExtras();
         characterId = intent.getInt(CHARACTER_ID_KEY);
         itemId = intent.getInt(INVENTORY_ID_KEY);
-        Log.d("Item ID received: ", Integer.toString(itemId));
         if(itemId!=-1) {
-            viewModel.loadItem(itemId);
+            viewModel.loadItem(itemId, characterId);
         }
         initViewModel();
     }
@@ -81,7 +86,6 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
             @Override
             public void onItemSelected(AdapterView<?> parent, View selectedItemView, int position, long id)
             {
-                Log.d("type", "Location Selected");
                 location=parent.getItemAtPosition(position).toString();
                 //your code here
 
@@ -249,25 +253,43 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
         if(type == "Weapon"){
             EditText skill = findViewById(R.id.rank);
             CheckBox fav = findViewById(R.id.favorite);
-            Weapon stabAndSmasher = null;
             try {
-                stabAndSmasher = new Weapon(itemId,
+                stabAndSmasher=(new Weapon(itemId,
                         name.getText().toString(),
                         description.getText().toString(),
                         Double.parseDouble(quantity.getText().toString()),
                         characterId,
                         skill.getText().toString(),
-                        fav.isChecked());
+                        fav.isChecked()));
             }catch (Exception e){
                 Log.e("Invalid input", "saveItem: ", e);
                 Toast.makeText(context, "Please make sure all fields are filled out.", Toast.LENGTH_SHORT).show();
                 return false;
             }
             try {
-
-                viewModel.saveItem((Weapon) stabAndSmasher);
+                final Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("stab and smasher skill", "Starting thread");
+                        Looper.prepare();
+                        Log.d("stab and smasher skill", stabAndSmasher.getSkillName());
+                        gotSkill = viewModel.getSkill(stabAndSmasher.getSkillName(), characterId);
+                        Log.d("stab and smasher skill", "finished thread");
+                    }
+                });
+                thread.start();
+                thread.join();
+                try {
+                    gotSkill.getName();
+                    viewModel.saveItem(stabAndSmasher);
+                    return true;
+                }catch (Exception e){
+                    Log.e("Database Error", "saveItem: ", e);
+                    Toast.makeText(context, "Error saving the Weapon to the database, Please make sure you have the skill to use it.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }catch (Exception e){
-                //Log.e("Database Error", "saveItem: ", e);
+                Log.e("Database Error", "saveItem: ", e);
                 Toast.makeText(context, "Error saving the Weapon to the database, Please make sure you have the skill to use it.", Toast.LENGTH_SHORT).show();
                 return false;
             }

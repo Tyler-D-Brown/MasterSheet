@@ -1,7 +1,6 @@
 package com.example.app.ViewModel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -104,14 +103,11 @@ public class InventoryListViewModel extends AndroidViewModel {
                 break;
         }
         double rank = skill.getRank();
-        Log.d("getDice: ", Integer.toString(attributeDice));
-        Log.d("rank: ", Double.toString(rank));
         if(rank < (int)rank) {
-            Log.d("TAG", "rounding down");
+
             return attributeDice + (int)rank-1;
         }
         else{
-            Log.d("TAG", Integer.toString(attributeDice + (int)rank));
             return attributeDice + (int)rank;
         }
     }

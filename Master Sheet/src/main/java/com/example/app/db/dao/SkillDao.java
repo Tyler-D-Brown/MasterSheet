@@ -31,4 +31,7 @@ public interface SkillDao {
 
     @Query("SELECT * FROM skills WHERE character = :character AND starred = 1")
     LiveData<List<Skill>> getStarredCharacterSkills(int character);
+
+    @Query("SELECT name FROM skills WHERE character = :character")
+    LiveData<List<String>> getCharacterSkillNames(int character);
 }
