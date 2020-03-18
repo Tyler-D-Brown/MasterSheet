@@ -270,11 +270,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                 final Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("stab and smasher skill", "Starting thread");
-                        Looper.prepare();
-                        Log.d("stab and smasher skill", stabAndSmasher.getSkillName());
                         gotSkill = viewModel.getSkill(stabAndSmasher.getSkillName(), characterId);
-                        Log.d("stab and smasher skill", "finished thread");
                     }
                 });
                 thread.start();

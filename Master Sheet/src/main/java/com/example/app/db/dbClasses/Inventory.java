@@ -49,7 +49,6 @@ public class Inventory {
 
     @Ignore
     public Inventory(Armor item){
-        Log.d("Inventory is a ", "Armor");
         if(id != -1) {
             this.id = item.getId();
         }
@@ -64,7 +63,6 @@ public class Inventory {
 
     @Ignore
     public Inventory(Item item){
-        Log.d("Inventory is a ", "Item");
         if(id != -1) {
             this.id = item.getId();
         }
@@ -77,7 +75,6 @@ public class Inventory {
 
     @Ignore
     public Inventory(Weapon weapon){
-        Log.d("Inventory is a ", "Weapon");
         if(id != -1) {
             this.id = weapon.getId();
         }

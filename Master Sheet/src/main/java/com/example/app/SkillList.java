@@ -42,8 +42,6 @@ public class SkillList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-  //      SearchView search = findViewById(R.id.search);
-//        search.setVisibility(View.GONE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchable_list);
         initViewModel();
