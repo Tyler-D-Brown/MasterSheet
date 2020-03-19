@@ -11,6 +11,8 @@ import com.example.app.InventoryClasses.Armor;
 import com.example.app.InventoryClasses.Item;
 import com.example.app.InventoryClasses.Weapon;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 @Entity(tableName = "Inventory", foreignKeys =
         {
             @ForeignKey(entity = Skill.class, parentColumns = {"name", "character"}, childColumns = {"skillName", "character"}),

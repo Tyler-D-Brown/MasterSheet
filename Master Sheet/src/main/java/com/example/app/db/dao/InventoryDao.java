@@ -31,4 +31,7 @@ public interface InventoryDao {
 
     @Query("SELECT * FROM Inventory WHERE character = :character AND starred = 1")
     LiveData<List<Inventory>> getStarredCharacterInventory(int character);
+
+    @Query("DELETE FROM Inventory WHERE character = :character")
+    void deleteCharacterInventory(int character);
 }

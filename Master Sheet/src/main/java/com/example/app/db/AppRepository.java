@@ -89,6 +89,8 @@ public class AppRepository {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                db.skills().deleteCharacterSkills(character);
+                db.inventory().deleteCharacterInventory(character);
                 db.character().deleteCharacter(db.character().getCharacterById(character));
             }
         });

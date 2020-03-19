@@ -495,11 +495,11 @@
     android:layout_marginRight="8dp"
     android:layout_marginBottom="8dp"
     android:clickable="true"
-    app:backgroundTint="#FF5722"
+    app:backgroundTint="#8392AD"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/scrollView"
-    app:srcCompat="@android:drawable/ic_input_add" />
+    app:srcCompat="@drawable/skills_icon" />
 
 <com.google.android.material.floatingactionbutton.FloatingActionButton
     android:id="@+id/addInventory"
@@ -509,18 +509,18 @@
     android:layout_marginRight="8dp"
     android:layout_marginBottom="8dp"
     android:clickable="true"
-    app:backgroundTint="#FF5722"
+    app:backgroundTint="#8392AD"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/scrollView"
-    app:srcCompat="@android:drawable/ic_input_add" />
+    app:srcCompat="@drawable/inventory_icon" />
 
 <com.google.android.material.floatingactionbutton.FloatingActionButton
     android:id="@+id/saveCharacter"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
-    app:backgroundTint="#FF5722"
+    app:backgroundTint="#8392AD"
     app:layout_constraintEnd_toStartOf="@+id/addSkill"
     app:layout_constraintStart_toEndOf="@+id/addInventory"
     app:layout_constraintTop_toBottomOf="@+id/scrollView"

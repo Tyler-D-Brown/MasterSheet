@@ -16,7 +16,7 @@ public interface CharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCharacter(Characters characters);
 
-    @Delete
+    @Delete()
     void deleteCharacter(Characters characters);
 
     @Query("SELECT * FROM Characters WHERE id=:id")

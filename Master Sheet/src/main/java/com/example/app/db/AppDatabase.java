@@ -14,7 +14,7 @@ import com.example.app.db.dbClasses.Characters;
 import com.example.app.db.dbClasses.Inventory;
 import com.example.app.db.dbClasses.Skill;
 
-@Database(entities={Characters.class, Inventory.class, Skill.class}, version=2)
+@Database(entities={Characters.class, Inventory.class, Skill.class}, version=4)
 public abstract class AppDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "MasterSheet.db";
     private static volatile AppDatabase instance;

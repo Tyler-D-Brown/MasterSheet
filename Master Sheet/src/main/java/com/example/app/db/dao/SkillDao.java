@@ -34,4 +34,7 @@ public interface SkillDao {
 
     @Query("SELECT name FROM skills WHERE character = :character")
     LiveData<List<String>> getCharacterSkillNames(int character);
+
+    @Query("DELETE FROM skills WHERE character = :character")
+    void deleteCharacterSkills(int character);
 }

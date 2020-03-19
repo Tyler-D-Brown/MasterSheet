@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:clickable="true"
+        app:backgroundTint="#8392AD"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
