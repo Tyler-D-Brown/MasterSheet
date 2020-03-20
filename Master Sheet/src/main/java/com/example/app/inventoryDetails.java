@@ -144,7 +144,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                       case "Weapon":
                           EditText name2 = (EditText) findViewById(R.id.name);
                           EditText quantity2 = findViewById(R.id.quantity);
-                          quantity2.setText(Double.toString(weapon.getQty()));
+
                           if (typeList.indexOf(type)!=-1){
                               typeSpin.setSelection(typeList.indexOf(type));
                           }
@@ -157,11 +157,11 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                           locationSpin.setVisibility(View.GONE);
 
                           if(itemId !=-1) {
-                              weapon = new Weapon(viewModel.item.getValue());
                               name2.setText(weapon.getName());
                               description2.setText(weapon.getDescription());
                               favorited2.setChecked(weapon.isStarred());
                               rank2.setText(weapon.getSkillName());
+                              quantity2.setText(Double.toString(weapon.getQty()));
                           }
                           break;
                       case "Armor":
@@ -254,6 +254,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
             EditText skill = findViewById(R.id.rank);
             CheckBox fav = findViewById(R.id.favorite);
             try {
+                Log.d("quantity", quantity.getText().toString());
                 stabAndSmasher=(new Weapon(itemId,
                         name.getText().toString(),
                         description.getText().toString(),
