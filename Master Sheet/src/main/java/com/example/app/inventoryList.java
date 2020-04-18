@@ -130,6 +130,7 @@ public class inventoryList extends AppCompatActivity {
                     public void onClick(View button) {
                         Intent intent = new Intent(getBaseContext(), inventoryDetails.class);
                         intent.putExtra(INVENTORY_ID_KEY, add.getId());
+                        Log.d("item details", add.getName() + " " + add.getId());
                         intent.putExtra(CHARACTER_ID_KEY, add.getCharacter());
                         try {
                             context.startActivity(intent);

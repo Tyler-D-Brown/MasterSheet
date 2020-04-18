@@ -157,6 +157,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                           locationSpin.setVisibility(View.GONE);
 
                           if(itemId !=-1) {
+                              weapon = new Weapon(viewModel.item.getValue());
                               name2.setText(weapon.getName());
                               description2.setText(weapon.getDescription());
                               favorited2.setChecked(weapon.isStarred());
