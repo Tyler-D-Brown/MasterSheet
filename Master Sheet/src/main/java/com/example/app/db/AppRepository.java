@@ -1,6 +1,7 @@
 package com.example.app.db;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -124,5 +125,13 @@ public class AppRepository {
 
     public LiveData<List<String>> getSkillNames(int character){
         return db.skills().getCharacterSkillNames(character);
+    }
+
+    public List<Inventory> getArmorByLocation(int character, String location){
+        Log.e("AppRepository", "getting Armor");
+        List<Inventory> item = db.inventory().getArmorByLocation(character, location);
+        //Log.e("AppRepository", item.getArmorLocation());
+        Log.e("AppRepository", "found gear");
+        return item;
     }
 }

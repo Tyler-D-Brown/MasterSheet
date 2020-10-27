@@ -75,10 +75,11 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
         final List<String> locationList = new ArrayList<String>();
         locationList.add("Head");
         locationList.add("Torso");
-        locationList.add("leftArm");
-        locationList.add("rightArm");
-        locationList.add("leftLeg");
-        locationList.add("rightLeg");
+        locationList.add("Left Arm");
+        locationList.add("Right Arm");
+        locationList.add("Left Leg");
+        locationList.add("Right Leg");
+        locationList.add("Unequipped");
         ArrayAdapter<String> locationAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, locationList);
         locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpin.setAdapter(locationAdapter);
@@ -185,8 +186,8 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                               description3.setText(armor.getDescription());
                               rankHeading3.setText("Rank");
                               rank3.setText(Integer.toString(armor.getRating()));
+                              Log.e("item location", armor.getArmorLocation());
                               if (locationList.indexOf(armor.getArmorLocation())!=-1){
-
                                   locationSpin.setSelection(locationList.indexOf(armor.getArmorLocation()));
                               }
                           }
@@ -294,6 +295,15 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
         }else if(type == "Armor"){
             EditText reduction = findViewById(R.id.rank);
             Armor armor = null;
+            try {
+                Log.e("current location", location);
+                List<Inventory> gear = viewModel.getArmorLocation(characterId, location);
+                //Armor oldArmor = new Armor();
+                Log.e("armor found", "armor exists on this location");
+                Toast.makeText(context, "You already have armor equipped there.", Toast.LENGTH_SHORT).show();
+                return false;
+            }catch (Exception success) {
+                Log.e("moved to Exception", "no armor equipped there");
                 try {
                     armor = new Armor(itemId,
                             name.getText().toString(),
@@ -301,8 +311,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                             Double.parseDouble(quantity.getText().toString()),
                             characterId,
                             Integer.parseInt(reduction.getText().toString()),
-                            location
-                    );
+                            location);
                 }catch (Exception e){
                     Log.e("Invalid input", "saveItem: ", e);
                     Toast.makeText(context, "Please make sure all fields are filled out.", Toast.LENGTH_SHORT).show();
@@ -310,11 +319,13 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
                 }
                 try {
                     viewModel.saveItem(new Inventory(armor));
+                    return true;
                 }catch (Exception e){
                     Log.e("Database Error", "Error saving to database", e);
                     Toast.makeText(context, "Error saving to the database, please try again. ", Toast.LENGTH_SHORT).show();
                     return false;
                 }
+            }
         }else{
             Item item = null;
                 try {

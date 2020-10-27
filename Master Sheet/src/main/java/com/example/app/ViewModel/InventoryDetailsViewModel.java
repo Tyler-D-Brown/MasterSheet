@@ -80,4 +80,8 @@ public class InventoryDetailsViewModel extends AndroidViewModel {
     public Skill getSkill(String skillName, int characterId) {
         return repository.getSkill(skillName, characterId);
     }
+
+    public List<Inventory> getArmorLocation(int characterId, String location) {
+        return repository.getArmorByLocation(characterId, location);
+    }
 }
