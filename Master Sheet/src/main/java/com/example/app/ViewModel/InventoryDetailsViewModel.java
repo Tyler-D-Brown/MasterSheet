@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 public class InventoryDetailsViewModel extends AndroidViewModel {
     public AppRepository repository;
     public MutableLiveData<Inventory> item = new MutableLiveData<Inventory>();
+    public MutableLiveData<Inventory> armorLocationCheck = new MutableLiveData<Inventory>();
     private Executor executor = Executors.newSingleThreadExecutor();
     public MutableLiveData<Skill> skillCheck = new MutableLiveData<Skill>();
     public LiveData<List<String>> skills;
@@ -81,7 +82,12 @@ public class InventoryDetailsViewModel extends AndroidViewModel {
         return repository.getSkill(skillName, characterId);
     }
 
-    public List<Inventory> getArmorLocation(int characterId, String location) {
-        return repository.getArmorByLocation(characterId, location);
+    public void getArmorLocation(final int characterId, final String location) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                armorLocationCheck.postValue(repository.getArmorByLocation(characterId, location));
+            }
+        });
     }
 }

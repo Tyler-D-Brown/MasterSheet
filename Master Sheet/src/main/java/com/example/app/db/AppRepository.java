@@ -73,7 +73,9 @@ public class AppRepository {
 
     public void trainSkill(String name, int character){
         Skill skill = db.skills().getSkill(character, name);
-        skill.setRank(skill.getRank()+.1);
+        double value = .1;
+        //value.
+        skill.setRank(skill.getRank() + .1);
         db.skills().insertSkill(skill);
     }
 
@@ -127,11 +129,7 @@ public class AppRepository {
         return db.skills().getCharacterSkillNames(character);
     }
 
-    public List<Inventory> getArmorByLocation(int character, String location){
-        Log.e("AppRepository", "getting Armor");
-        List<Inventory> item = db.inventory().getArmorByLocation(character, location);
-        //Log.e("AppRepository", item.getArmorLocation());
-        Log.e("AppRepository", "found gear");
-        return item;
+    public Inventory getArmorByLocation(int character, String location){
+        return db.inventory().getArmorByLocation(character, location);
     }
 }

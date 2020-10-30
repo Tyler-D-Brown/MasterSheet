@@ -35,6 +35,6 @@ public interface InventoryDao {
     @Query("DELETE FROM Inventory WHERE character = :character")
     void deleteCharacterInventory(int character);
 
-    @Query("SELECT * FROM Inventory WHERE character = :character AND armorLocation = :location")
-    List<Inventory> getArmorByLocation(int character, String location);
+    @Query("SELECT * FROM Inventory WHERE character = :character AND armorLocation = :location LIMIT 1")
+    Inventory getArmorByLocation(int character, String location);
 }

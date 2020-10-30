@@ -58,6 +58,7 @@ public class characterDetails extends AppCompatActivity {
             final EditText leftLegHealth = findViewById(R.id.leftLegHealth);
             final EditText rightLegHealth = findViewById(R.id.rightLegHealth);
             final TextView healthHeading = findViewById(R.id.healthHeading);
+
             healthHeading.setVisibility(View.GONE);
             headHealth.setVisibility(View.GONE);
             torsoHealth.setVisibility(View.GONE);
@@ -65,6 +66,23 @@ public class characterDetails extends AppCompatActivity {
             rightArmHealth.setVisibility(View.GONE);
             leftLegHealth.setVisibility(View.GONE);
             rightLegHealth.setVisibility(View.GONE);
+
+            final TextView armorHeading = findViewById(R.id.armorHeading);
+            final EditText headArmor = findViewById(R.id.headArmor);
+            final EditText torsoArmor = findViewById(R.id.torsoArmor);
+            final EditText leftArmArmor = findViewById(R.id.leftArmArmor);
+            final EditText rightArmArmor = findViewById(R.id.rightArmArmor);
+            final EditText leftLegArmor = findViewById(R.id.leftLegArmor);
+            final EditText rightLegArmor = findViewById(R.id.rightLegArmor);
+
+            armorHeading.setVisibility(View.GONE);
+            headArmor.setVisibility(View.GONE);
+            torsoArmor.setVisibility(View.GONE);
+            leftArmArmor.setVisibility(View.GONE);
+            rightArmArmor.setVisibility(View.GONE);
+            leftLegArmor.setVisibility(View.GONE);
+            rightLegArmor.setVisibility(View.GONE);
+
         }else{
             viewModel.loadData(characterId);
             final EditText characterName = findViewById(R.id.characterName);
@@ -154,12 +172,12 @@ public class characterDetails extends AppCompatActivity {
                     leftLegHealth.setText(Integer.toString(viewModel.character.getValue().getLeftLegDamage()));
                     rightLegHealth.setText(Integer.toString(viewModel.character.getValue().getRightLegDamage()));
 
-                    headArmor.setText(Integer.toString(viewModel.character.getValue().getHeadArmor()));
-                    torsoArmor.setText(Integer.toString(viewModel.character.getValue().getTorsoArmor()));
-                    leftArmArmor.setText(Integer.toString(viewModel.character.getValue().getLeftArmArmor()));
-                    rightArmArmor.setText(Integer.toString(viewModel.character.getValue().getRightArmArmor()));
-                    leftLegArmor.setText(Integer.toString(viewModel.character.getValue().getLeftLegArmor()));
-                    rightLegArmor.setText(Integer.toString(viewModel.character.getValue().getRightLegArmor()));
+                    headArmor.setText(Integer.toString(viewModel.headArmor.getValue().getRating()));
+                    torsoArmor.setText(Integer.toString(viewModel.torsoArmor.getValue().getRating()));
+                    leftArmArmor.setText(Integer.toString(viewModel.leftArmArmor.getValue().getRating()));
+                    rightArmArmor.setText(Integer.toString(viewModel.rightArmArmor.getValue().getRating()));
+                    leftLegArmor.setText(Integer.toString(viewModel.leftLegArmor.getValue().getRating()));
+                    rightLegArmor.setText(Integer.toString(viewModel.rightLegArmor.getValue().getRating()));
                     initViewModel();
                 }
             }, 50);
@@ -196,7 +214,7 @@ public class characterDetails extends AppCompatActivity {
                         Log.d("Except", e.toString());
                     }
                 }else{
-                    Toast.makeText(context, "Please save the Character before adding a any Items.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please save the Character before adding any Items.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -255,6 +273,12 @@ public class characterDetails extends AppCompatActivity {
             int radam = 0;
             int lldam = 0;
             int rldam = 0;
+            int har = 0;
+            int tar = 0;
+            int lar = 0;
+            int rar = 0;
+            int rlar = 0;
+            int llar = 0;
 
             if (characterId != -1) {
                 hdam = Integer.parseInt(headHealth.getText().toString());
@@ -263,14 +287,15 @@ public class characterDetails extends AppCompatActivity {
                 radam = Integer.parseInt(rightArmHealth.getText().toString());
                 lldam = Integer.parseInt(leftLegHealth.getText().toString());
                 rldam = Integer.parseInt(rightLegHealth.getText().toString());
+
+                har = Integer.parseInt(headArmor.getText().toString());
+                tar = Integer.parseInt(torsoArmor.getText().toString());
+                lar = Integer.parseInt(leftArmArmor.getText().toString());
+                rar = Integer.parseInt(rightArmArmor.getText().toString());
+                rlar = Integer.parseInt(leftLegArmor.getText().toString());
+                llar = Integer.parseInt(rightLegArmor.getText().toString());
             }
 
-            int har = Integer.parseInt(headArmor.getText().toString());
-            int tar = Integer.parseInt(torsoArmor.getText().toString());
-            int lar = Integer.parseInt(leftArmArmor.getText().toString());
-            int rar = Integer.parseInt(rightArmArmor.getText().toString());
-            int rlar = Integer.parseInt(leftLegArmor.getText().toString());
-            int llar = Integer.parseInt(rightLegArmor.getText().toString());
             character = new Characters(
                     characterId, name.getText().toString(), race.getText().toString(),
                     build.getText().toString(), str, dex, agi, intel,

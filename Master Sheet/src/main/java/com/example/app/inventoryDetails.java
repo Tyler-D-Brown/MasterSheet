@@ -88,6 +88,7 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
             public void onItemSelected(AdapterView<?> parent, View selectedItemView, int position, long id)
             {
                 location=parent.getItemAtPosition(position).toString();
+                viewModel.getArmorLocation(characterId, location);
                 //your code here
 
             }
@@ -296,14 +297,15 @@ public class inventoryDetails extends AppCompatActivity implements AdapterView.O
             EditText reduction = findViewById(R.id.rank);
             Armor armor = null;
             try {
-                Log.e("current location", location);
-                List<Inventory> gear = viewModel.getArmorLocation(characterId, location);
-                //Armor oldArmor = new Armor();
-                Log.e("armor found", "armor exists on this location");
+                if(viewModel.armorLocationCheck.getValue().getId() == itemId){
+                    throw(new Exception("Good to move ahead and save."));
+                }else if(location.equals("Unequipped")){
+                    throw(new Exception("Good to move ahead and save."));
+                }
                 Toast.makeText(context, "You already have armor equipped there.", Toast.LENGTH_SHORT).show();
                 return false;
             }catch (Exception success) {
-                Log.e("moved to Exception", "no armor equipped there");
+                Log.e("moved to Exception", "error", success);
                 try {
                     armor = new Armor(itemId,
                             name.getText().toString(),

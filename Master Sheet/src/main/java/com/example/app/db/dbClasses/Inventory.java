@@ -50,6 +50,11 @@ public class Inventory {
     public Inventory(){}
 
     @Ignore
+    public Inventory(int rating){
+        this.rating = rating;
+    }
+
+    @Ignore
     public Inventory(Armor item){
         if(id != -1) {
             this.id = item.getId();

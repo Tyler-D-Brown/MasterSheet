@@ -29,10 +29,10 @@
         android:text="CharacterName Skill"
         android:textSize="16sp"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/heading" />
+        <!--app:layout_constraintBottom_toTopOf="@+id/search"-->
 
     <TextView
         android:id="@+id/skillNameHeading"

@@ -24,13 +24,24 @@ public class CharacterDetailsModel extends AndroidViewModel {
     public MutableLiveData<Characters> character = new MutableLiveData<Characters>();
     public LiveData<List<Inventory>> starredInventory;
     public LiveData<List<Skill>> starredSkills;
+    public MutableLiveData<Inventory> headArmor = new MutableLiveData<>();
+    public MutableLiveData<Inventory> torsoArmor = new MutableLiveData<>();
+    public MutableLiveData<Inventory> leftArmArmor = new MutableLiveData<>();
+    public MutableLiveData<Inventory> rightArmArmor = new MutableLiveData<>();
+    public MutableLiveData<Inventory> leftLegArmor = new MutableLiveData<>();
+    public MutableLiveData<Inventory> rightLegArmor = new MutableLiveData<>();
     private Executor executor = Executors.newSingleThreadExecutor();
     MutableLiveData<Skill> skill = new MutableLiveData<>();
 
     public CharacterDetailsModel(@NonNull Application application){
         super(application);
         repository = AppRepository.getInstance(getApplication());
-
+        headArmor.setValue(new Inventory(0));
+        torsoArmor.setValue(new Inventory(0));
+        leftArmArmor.setValue(new Inventory(0));
+        rightArmArmor.setValue(new Inventory(0));
+        leftLegArmor.setValue(new Inventory(0));
+        rightLegArmor.setValue(new Inventory(0));
     }
 
     public void loadData(final int characterId){
@@ -39,7 +50,6 @@ public class CharacterDetailsModel extends AndroidViewModel {
             public void run() {
                 if(repository.getCharacterById(characterId) != null) {
                     character.postValue(repository.getCharacterById(characterId));
-
                 }
                 if(repository.getStarredCharacterSkills(characterId) != null) {
                     starredSkills = repository.getStarredCharacterSkills(characterId);
@@ -47,6 +57,7 @@ public class CharacterDetailsModel extends AndroidViewModel {
                 if(repository.getStarredCharacterInventory(characterId) != null) {
                     starredInventory = repository.getStarredCharacterInventory(characterId);
                 }
+                getArmor(characterId);
             }
         });
     }
@@ -67,6 +78,27 @@ public class CharacterDetailsModel extends AndroidViewModel {
                 repository.trainSkill(skill.getName(), skill.getCharacter());
             }
         });
+    }
+
+    public void getArmor(final int characterId){
+        if(repository.getArmorByLocation(characterId, "Head") != null) {
+            headArmor.postValue(repository.getArmorByLocation(characterId, "Head"));
+        }
+        if(repository.getArmorByLocation(characterId, "Torso") != null) {
+            torsoArmor.postValue(repository.getArmorByLocation(characterId, "Torso"));
+        }
+        if(repository.getArmorByLocation(characterId, "Left Arm") != null) {
+            leftArmArmor.postValue(repository.getArmorByLocation(characterId, "Left Arm"));
+        }
+        if(repository.getArmorByLocation(characterId, "Right Arm") != null) {
+            rightArmArmor.postValue(repository.getArmorByLocation(characterId, "Right Arm"));
+        }
+        if(repository.getArmorByLocation(characterId, "Left Leg") != null) {
+            leftLegArmor.postValue(repository.getArmorByLocation(characterId, "Left Leg"));
+        }
+        if(repository.getArmorByLocation(characterId, "Right Leg") != null) {
+            rightLegArmor.postValue(repository.getArmorByLocation(characterId, "Right Leg"));
+        }
     }
 
     public int getDice(final String skillName, final int characterId){

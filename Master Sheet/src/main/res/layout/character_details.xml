@@ -275,10 +275,11 @@
         android:textSize="10sp" />
 
     <TextView
-        android:text="Armor"
-        android:layout_column="3"
+        android:id="@+id/armorHeading"
         android:layout_row="0"
-        android:textSize="10sp"/>
+        android:layout_column="3"
+        android:text="Armor"
+        android:textSize="10sp" />
 
     <TextView
         android:text="Head"
