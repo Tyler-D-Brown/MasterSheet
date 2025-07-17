@@ -1,2 +1,2 @@
 # MasterSheet
-Character sheet management
+Application for Tabletop RPG Character sheet management
