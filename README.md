@@ -1,2 +1,2 @@
 # MasterSheet
-Application for Tabletop RPG Character sheet management
+Android mobile Application for Tabletop RPG Character sheet management
